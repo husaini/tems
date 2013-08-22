@@ -272,8 +272,26 @@ switch($func) {
                 $stmt->bind_param('isi', $uid, $now, $woid);
             $stmt->execute();
 
-            $stmt = $mysqli->prepare("UPDATE workorder SET category = ?, description = ?, status = ?, vendorid = ?, required = ?, completed = ?, cost = ?, orderno = ?, modified = ? WHERE id = ?");
+            /* Changes: 20130822 - Husaini
+             * If status = completed, change completed date to current
+            */
+            /*
+             *  $wostatus[1] = "Scheduled";
+                $wostatus[2] = "Completed";
+                $wostatus[3] = "Cancelled";
+            */
+
+            if ($wostatus == '2')
+            {
+                $dtcomplete =   date('Y-m-d', time());
+                $stmt       =   $mysqli->prepare("UPDATE workorder SET category = ?, description = ?, status = ?, vendorid = ?, required = ?, completed = ?, cost = ?, orderno = ?, modified = ? WHERE id = ?");
                 $stmt->bind_param('isiissdssi', $wocat, $wodesc, $wostatus, $vendorid, $dtrequire, $dtcomplete, $wocost, $orderno, $now, $woid);
+            }
+            else
+            {
+                $stmt = $mysqli->prepare("UPDATE workorder SET category = ?, description = ?, status = ?, vendorid = ?, required = ?, completed = ?, cost = ?, orderno = ?, modified = ? WHERE id = ?");
+                $stmt->bind_param('isiissdssi', $wocat, $wodesc, $wostatus, $vendorid, $dtrequire, $dtcomplete, $wocost, $orderno, $now, $woid);
+            }
 
             if (!$stmt->execute()) {
                 echo "<b>Error in database operation:</b> " . $mysqli->error;
@@ -390,7 +408,7 @@ switch($func) {
             $uid = $_SESSION['uid'];
 
             $stmt = $mysqli->prepare("UPDATE vendor SET name = ?, person = ?, phone = ?, fax = ?, address = ?, email = ?, type = ?, status = ?, remarks = ?, modified = NOW() WHERE id = ?");
-                $stmt->bind_param('ssssssiisi', $vname, $vperson, $vphone, $vfax, $vaddr, $vemail, $vtype, $vstatus, $vrem, $vid);
+            $stmt->bind_param('ssssssiisi', $vname, $vperson, $vphone, $vfax, $vaddr, $vemail, $vtype, $vstatus, $vrem, $vid);
 
             if (!$stmt->execute()) {
                 echo "<b>Error in database operation:</b> " . $mysqli->error;

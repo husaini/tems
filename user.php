@@ -60,11 +60,14 @@ if($result){
 <title>TEMS: User Management</title>
 <link rel="stylesheet" href="css/style.css" type="text/css" media="screen">
 <link rel="stylesheet" href="css/jqueryui/jquery-ui-1.9.2.custom.css" type="text/css" media="screen">
+<link rel="stylesheet" href="datatables/css/demo_table_jui.css" type="text/css" media="screen">
 <link rel="stylesheet" href="css/jquery.multiselect.css" type="text/css" media="screen">
+<link rel="stylesheet" href="css/table_jui.css" type="text/css" media="screen">
 
 <script type="text/javascript" src="js/jquery.min.js"></script>
 <script type="text/javascript" src="js/jquery-ui.min.js"></script>
 <script type="text/javascript" src="js/jquery.multiselect.min.js"></script>
+<script type="text/javascript" src="datatables/jquery.datatables.js"></script>
 </head>
 <body>
     <div id="body_content">
@@ -86,7 +89,7 @@ if($result){
                 <?php endif; ?>
                 <?php if ($admins): ?>
                     <h3>Admin Group</h3>
-                    <table class="full-width tems-table">
+                    <table class="full-width tems-table user-list">
                         <thead>
                             <tr>
                                 <th width="10%">Username</th>
@@ -178,14 +181,14 @@ if($result){
 
                 <?php if ($users): ?>
                     <h3>User Group</h3>
-                    <table class="full-width tems-table">
+                    <table class="full-width tems-table user-list">
                         <thead>
                             <tr>
                                 <th width="10%">Username</th>
                                 <th width="17%">Fullname</th>
                                 <th width="17%">Site</th>
-                                <th width="17%">Location</th>
                                 <th width="17%">Department</th>
+                                <th width="17%">Location</th>
                                 <th width="17%">Last Login</th>
                                 <th width="5%">Action</th>
                             </tr>
@@ -215,22 +218,7 @@ if($result){
                                         <?php endif; ?>
                                     <?php endif; ?>
                                 </td>
-                                <td>
-                                    <?php if($u['access']['locations']): ?>
-                                        <?php if($total_locations && count($u['access']['locations']) == $total_locations): ?>
-                                            All
-                                        <?php else: ?>
-                                            <?php $count=1; foreach ($u['access']['locations'] as $loc): ?>
-                                                <a href="editloc.php?id=<?php echo $loc['id'];?>&amp;tab=tabloc"><?php echo $loc['name']; ?></a>
-                                                <?php if($count < count($u['access']['locations'])): ?>
-                                                    ,
-                                                <?php endif; ?>
-                                            <?php $count++; endforeach; ?>
-                                        <?php endif; ?>
-                                    <?php else: ?>
-                                        None
-                                    <?php endif; ?>
-                                </td>
+
                                 <td>
                                     <?php if($u['access']['departments']): ?>
                                         <?php if(count($u['access']['departments']) == $total_departments): ?>
@@ -241,6 +229,22 @@ if($result){
                                                     <?php echo $dept['name']; ?>
                                                 </a>
                                                 <?php if($count < count($u['access']['departments'])): ?>
+                                                    ,
+                                                <?php endif; ?>
+                                            <?php $count++; endforeach; ?>
+                                        <?php endif; ?>
+                                    <?php else: ?>
+                                        None
+                                    <?php endif; ?>
+                                </td>
+                                <td>
+                                    <?php if($u['access']['locations']): ?>
+                                        <?php if($total_locations && count($u['access']['locations']) == $total_locations): ?>
+                                            All
+                                        <?php else: ?>
+                                            <?php $count=1; foreach ($u['access']['locations'] as $loc): ?>
+                                                <a href="editloc.php?id=<?php echo $loc['id'];?>&amp;tab=tabloc"><?php echo $loc['name']; ?></a>
+                                                <?php if($count < count($u['access']['locations'])): ?>
                                                     ,
                                                 <?php endif; ?>
                                             <?php $count++; endforeach; ?>
@@ -676,6 +680,15 @@ if($result){
                 $('.alert').fadeOut('slow');
             }, 2000);
         }
+
+        $('table.user-list').each(function() {
+            var oTable = $(this).dataTable({
+                bJQueryUI: true,
+                iDisplayLength: 25,
+                sPaginationType: 'full_numbers'
+            });
+            oTable.fnSort( [[1,'asc'] ] );//sort by full name
+        });
     });
     </script>
 </body>

@@ -41,7 +41,7 @@ if($result){
     list($total_sites) = $result->fetch_row();
     mysqli_free_result($result);
 }
-$result =   $mysqli->query('SELECT COUNT(1) FROM site_location');
+$result =   $mysqli->query('SELECT COUNT(1) FROM department_location');
 if($result){
     list($total_locations) = $result->fetch_row();
     mysqli_free_result($result);
@@ -217,7 +217,7 @@ if($result){
                                 </td>
                                 <td>
                                     <?php if($u['access']['locations']): ?>
-                                        <?php if(count($u['access']['locations']) == $total_locations): ?>
+                                        <?php if($total_locations && count($u['access']['locations']) == $total_locations): ?>
                                             All
                                         <?php else: ?>
                                             <?php $count=1; foreach ($u['access']['locations'] as $loc): ?>

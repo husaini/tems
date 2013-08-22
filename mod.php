@@ -852,6 +852,7 @@ switch($func) {
                         //clear current
                         deleteUserAccess($uid);
                     }
+
                     foreach ($sites as $site_id)
                     {
                         addUserAccess('site',$site_id, $uid);

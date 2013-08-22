@@ -14,12 +14,9 @@ $total_sites        =   0;
 tabletoarray("site", $sites);
 
 $sql    =   'SELECT '.
-                'user.*, '.
-                'site.name sname '.
+                'user.* '.
             'FROM '.
                 '`user` '.
-            'LEFT JOIN '.
-                '`site` ON site.id = siteid '.
             'WHERE '.
                 '`enabled` = 1 '.
             'ORDER BY '.
@@ -122,9 +119,7 @@ if($result){
                                                 <?php $count++; endforeach; ?>
                                             <?php endif; ?>
                                         <?php else: ?>
-                                            <a href="editsite.php?id=<?php echo $admin['siteid'];?>&amp;tab=tabdetails">
-                                                <?php echo $admin['sname'];?>
-                                            </a>
+                                            None
                                         <?php endif; ?>
                                     <?php endif; ?>
                                 </td>
@@ -142,6 +137,8 @@ if($result){
                                                 <?php endif; ?>
                                             <?php $count++; endforeach; ?>
                                         <?php endif; ?>
+                                    <?php else: ?>
+                                        None
                                     <?php endif; ?>
                                 </td>
                                 <td>
@@ -161,6 +158,8 @@ if($result){
                                                 <?php endif; ?>
                                             <?php $count++; endforeach; ?>
                                         <?php endif; ?>
+                                    <?php else: ?>
+                                        None
                                     <?php endif; ?>
                                 </td>
 
@@ -197,7 +196,7 @@ if($result){
                                 <td><?php echo $u['username'];?></td>
                                 <td><?php echo $u['name'];?></td>
                                 <td>
-                                    <?php if(!$u['sname']): ?>
+                                    <?php if(count($u['access']['sites']) == $total_sites): ?>
                                         All
                                     <?php else: ?>
                                         <?php if($u['access']['sites']): ?>
@@ -212,9 +211,7 @@ if($result){
                                                 <?php $count++; endforeach; ?>
                                             <?php endif; ?>
                                         <?php else: ?>
-                                            <a href="editsite.php?id=<?php echo $u['siteid'];?>&amp;tab=tabdetails">
-                                                <?php echo $u['sname'];?>
-                                            </a>
+                                            None
                                         <?php endif; ?>
                                     <?php endif; ?>
                                 </td>
@@ -224,12 +221,14 @@ if($result){
                                             All
                                         <?php else: ?>
                                             <?php $count=1; foreach ($u['access']['locations'] as $loc): ?>
-                                                <a href="editloc.php?id=<?php echo $loc['id'];?>&amp;sid=<?php echo $loc['siteid'];?>&amp;tab=tabloc"><?php echo $loc['name']; ?></a>
+                                                <a href="editloc.php?id=<?php echo $loc['id'];?>&amp;tab=tabloc"><?php echo $loc['name']; ?></a>
                                                 <?php if($count < count($u['access']['locations'])): ?>
                                                     ,
                                                 <?php endif; ?>
                                             <?php $count++; endforeach; ?>
                                         <?php endif; ?>
+                                    <?php else: ?>
+                                        None
                                     <?php endif; ?>
                                 </td>
                                 <td>
@@ -238,7 +237,7 @@ if($result){
                                             All
                                         <?php else: ?>
                                             <?php $count=1; foreach ($u['access']['departments'] as $dept): ?>
-                                                <a href="editdept.php?id=<?php echo $dept['id'];?>&amp;sid=<?php echo $dept['siteid'];?>&amp;tab=tabloc">
+                                                <a href="editdept.php?id=<?php echo $dept['id'];?>&amp;tab=tabloc">
                                                     <?php echo $dept['name']; ?>
                                                 </a>
                                                 <?php if($count < count($u['access']['departments'])): ?>
@@ -246,6 +245,8 @@ if($result){
                                                 <?php endif; ?>
                                             <?php $count++; endforeach; ?>
                                         <?php endif; ?>
+                                    <?php else: ?>
+                                        None
                                     <?php endif; ?>
                                 </td>
                                 <td nowrap="nowrap" class="right">

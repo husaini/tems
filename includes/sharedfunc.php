@@ -193,75 +193,47 @@ function getUserAccessList($uid) {
     $access_sites       =   array();
 
     require('conn.php');
-    $result   =   $mysqli->query('SELECT sites,departments,locations FROM user_access WHERE uid ='.$uid) or die(mysqli_error($mysqli));
-    if ($result) {
-        list($usites,$udepartments,$ulocations) = $result->fetch_row();
+
+    //sites
+    $result     =   $mysqli->query('SELECT s.id,s.name FROM user_site us INNER JOIN site s ON s.id = us.siteid WHERE us.uid = '.$uid);
+    if ($result)
+    {
+        while ($row = $result->fetch_object())
+        {
+            $access_sites[] =   array(
+                'id'    =>  $row->id,
+                'name'  =>  $row->name,
+            );
+        }
         mysqli_free_result($result);
+    }
 
-        if ($usites) {
-            $site_ids   =   unserialize($usites);
-            if(!is_array($site_ids)) {
-                $site_ids   =   array($site_ids);
-            }
-            foreach ($site_ids as $key => $sid) {
-                if(!is_numeric($sid)) {
-                    unset($site_ids[$key]);
-                }
-            }
-            if($site_ids) {
-                $rs_site    =   $mysqli->query('SELECT `id`, `name` FROM `site` WHERE `id` IN('.implode(',', $site_ids).') ORDER BY `name`');
-                if ($rs_site) {
-                    while($row = $rs_site->fetch_assoc()) {
-                        $access_sites[] =   array(
-                            'id'    =>  $row['id'],
-                            'name'  =>  $row['name']
-                        );
-                    }
-                }
-                mysqli_free_result($rs_site);
-            }
+    //departments
+    $result     =   $mysqli->query('SELECT sd.id,sd.name FROM user_department ud INNER JOIN site_department sd ON sd.id = ud.depid WHERE ud.uid = '.$uid);
+    if ($result)
+    {
+        while ($row = $result->fetch_object())
+        {
+            $access_departments[] =   array(
+                'id'    =>  $row->id,
+                'name'  =>  $row->name,
+            );
         }
-        if ($udepartments) {
-            $dept_ids =   unserialize($udepartments);
-            if(!is_array($dept_ids)) {
-                $dept_ids   =   array($dept_ids);
-            }
-            foreach ($dept_ids as $key => $id) {
-                if(!is_numeric($id)) {
-                    unset($dept_ids[$key]);
-                }
-            }
-            if($dept_ids) {
-                $rs_dept    =   $mysqli->query('SELECT * FROM `site_department` WHERE `id` IN('.implode(',', $dept_ids).') ORDER BY `name`');
-                if ($rs_dept) {
-                    while($row = $rs_dept->fetch_assoc()) {
-                        $access_departments[] =   $row;
-                    }
-                }
-                mysqli_free_result($rs_dept);
-            }
-        }
-        if($ulocations) {
-            $loc_ids   =   unserialize($ulocations);
-            if(!is_array($loc_ids)) {
-                $loc_ids   =   array($loc_ids);
-            }
-            foreach ($loc_ids as $key => $id) {
-                if(!is_numeric($id)) {
-                    unset($loc_ids[$key]);
-                }
-            }
-            if($loc_ids) {
-                $rs_loc    =   $mysqli->query('SELECT * FROM `site_location` WHERE `id` IN('.implode(',', $loc_ids).') ORDER BY `name`');
-                if ($rs_loc) {
-                    while($row = $rs_loc->fetch_assoc()) {
-                        $access_locations[] =   $row;
-                    }
-                }
-                mysqli_free_result($rs_loc);
-            }
-        }
+        mysqli_free_result($result);
+    }
 
+    //locations
+    $result     =   $mysqli->query('SELECT dl.id, dl.name FROM user_location ul INNER JOIN department_location dl ON dl.id = ul.locid WHERE ul.uid = '.$uid);
+    if ($result)
+    {
+        while ($row = $result->fetch_object())
+        {
+            $access_locations[] =   array(
+                'id'    =>  $row->id,
+                'name'  =>  $row->name,
+            );
+        }
+        mysqli_free_result($result);
     }
     return array(
         'departments'   =>  $access_departments,
@@ -417,6 +389,8 @@ function isSiteExist($site) {
     return $id;
 }
 
+if(!function_exists('recursive_array_search'))
+{
 function recursive_array_search($needle,$haystack) {
     foreach($haystack as $key=>$value) {
         $current_key=$key;
@@ -425,4 +399,14 @@ function recursive_array_search($needle,$haystack) {
         }
     }
     return false;
+}
+}
+
+function updateUserAccess($uid=null)
+{
+    if(!$uid)
+    {
+        $uid    =   getSession('uid');
+    }
+    setSession('access', getUserAccessList($uid));
 }

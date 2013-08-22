@@ -112,7 +112,6 @@ function confdel(obj, sid) {
             <ul>
                 <li><a href="#tabdetails">Site Details</a></li>
                 <li><a href="#tabdept">Departments</a></li>
-                <li><a href="#tabloc">Locations</a></li>
             </ul>
             <div id="tabdetails">
                 <h3>Site Details</h3>
@@ -223,92 +222,6 @@ function confdel(obj, sid) {
                     </p>
                 </form>
             </div>
-            <div id="tabloc">
-                <h3>Location List</h3>
-                <?php if(getSession('location_updated', true)): ?>
-                    <p class="alert alert-success">Location was successfully updated.</p>
-                <?php endif; ?>
-                <?php if(getSession('location_added', true)): ?>
-                    <p class="alert alert-success">Location was successfully added.</p>
-                <?php endif; ?>
-                <?php if(getSession('location_deleted', true)): ?>
-                    <p class="alert alert-success">Location <em>"<?php echo getSession('deleted_location', true);?>"</em> was successfully deleted.</p>
-                <?php endif; ?>
-                <table class="tlist2 full-width">
-                    <thead>
-                        <tr>
-                            <th>Location Name</th>
-                            <th>Department Name</th>
-                            <th>&nbsp;</th>
-                        </tr>
-                    </thead>
-                    <tbody>
-                    <?php
-                        $stmt->free_result();
-                        $stmt->close();
-                        unset($bindvars);
-                        unset($results);
-
-                        $loc_opt    =   '';
-                        if($uloc_ids) {
-                            $loc_opt    .=  'AND site_location.id IN('.implode(',', $uloc_ids).')';
-                        }
-                        $stmt       =   $mysqli->prepare("select site_location.*,site_department.siteid, site_department.name as department  from site_location left join site_department on site_location.depid=site_department.id WHERE site_department.siteid = ? $loc_opt ORDER BY site_department.name, site_location.name");
-                        $stmt->bind_param('i', $id);
-                        $stmt->execute();
-                        $stmt->store_result();
-
-                        if ($stmt->num_rows() > 0):
-                            $meta = $stmt->result_metadata();
-                            while ($column = $meta->fetch_field()) {
-                                $bindvars[] = &$results[$column->name];
-                            }
-                            call_user_func_array(array($stmt, 'bind_result'), $bindvars);
-
-                            while ($stmt->fetch()): ?>
-                                <tr>
-                                    <td>
-                                        <a href="editloc.php?id=<?php echo $results['id'];?>&amp;depid=<?php echo $depid;?>&amp;tab=tabloc"><?php echo $results['name'];?></a>
-                                    </td>
-                                    <td><a href="editdept.php?id=<?php echo $results['depid']?>&sid=<?php echo $results['siteid']?>&tab=tabloc"><?php echo $results['department']?></a></td>
-                                    <td>
-                                        <a href="delloc.php?id=<?php echo $results['id'];?>&amp;depid=<?php echo $depid;?>&amp;tab=tabloc">Delete</a>
-                                    </td>
-                                </tr>
-                            <?php endwhile; ?>
-                        <?php else: ?>
-                            <tr>
-                                <td colspan="3" align="center">No locations found.</td>
-                            </tr>
-                        <?php endif; ?>
-                    </tbody>
-                </table>
-
-                <h3>Add New Locations</h3>
-                <form method="post" action="mod.php">
-                    <input type="hidden" name="func" value="add_loc" />
-                    <input type="hidden" name="sid" value="<?php echo $id; ?>" />
-                    <p>
-                        <label class="auto">Location Name</label>
-                        <input required="required" type="text" name="lname" size="60" maxlength="100" value="" />
-                        to
-                        <select name="depid">
-                            <?php foreach($departments as $dep):?>
-                            <option value="<?=$dep['id']?>"><?=$dep['name']?></option>
-                            <?php endforeach;?>
-                        </select>
-                    </p>
-                    <p>
-                        <input type="submit" value="Submit Data" class="btn btn-primary">
-                    </p>
-                </form>
-                <form id="frmhidden" action="mod.php" method="post">
-                    <input type="hidden" name="func" value="del_loc" />
-                    <input type="hidden" name="lid" />
-                </form>
-            </div>
-
-
         </div>
     </div>
 </body>

@@ -459,6 +459,10 @@ switch($func) {
                 exit;
             }
 
+            //Changes: 20130822 Husaii - Auto add location access to user
+            $id  =   mysqli_insert_id($mysqli);
+            addUserAccess('site', $id);
+
             setSession('site_added', 1);
 
         } else {
@@ -502,25 +506,52 @@ switch($func) {
         break;
 
     case "add_loc":
-        if ($_POST['lname'] != "" && $_POST['sid'] != "") {
-            $lname = strtoupper($_POST['lname']);
-            $sid = $_POST['sid'];
-            $depid = $_POST['depid'];
+        if (isset($_POST['lname'])  && isset($_POST['depid']))
+        {
+            $lname  =   trim($_POST['lname']);
+            //$sid    =   $_POST['sid'];
+            $depid  =   $_POST['depid'];
 
+            /* Changes: 20130822 - Husaini
+             * Location should be under department
+             * Using new table department_location
+            */
+            /*
             $stmt = $mysqli->prepare("INSERT INTO site_location (name, depid) VALUES (?, ?)");
-                $stmt->bind_param('si', $lname, $depid);
+            $stmt->bind_param('si', $lname, $depid);
+            */
 
-            if (!$stmt->execute()) {
-                echo "<b>Error in database operation:</b> " . $mysqli->error;
-                exit;
+            if ($lname && $depid)
+            {
+                $stmt   =   $mysqli->prepare('INSERT INTO department_location(`depid`,`name`) VALUES(?,?)');
+                $stmt->bind_param('is', $depid, $lname);
+
+                if (!$stmt->execute()) {
+                    echo "<b>Error in database operation:</b> " . $mysqli->error;
+                    exit;
+                }
+
+                //Changes: 20130822 Husaii - Auto add location access to user
+                $locid  =   mysqli_insert_id($mysqli);
+                addUserAccess('location', $locid);
+
+
+                $sUrl .= "#tabloc";
+
+                setSession('location_added', 1);
             }
-            $sUrl .= "#tabloc";
+            else
+            {
+                $sMsg = "Required fields are empty.";
+                $sUrl .= "#tabdept";
+                $iDuration = 3000;
+            }
 
-            setSession('location_added', 1);
-
-        } else {
+        }
+        else
+        {
             $sMsg = "Required fields are empty.";
-            $sUrl .= "#tabloc";
+            $sUrl .= "#tabdept";
             $iDuration = 3000;
         }
         break;
@@ -537,8 +568,12 @@ switch($func) {
                 echo "<b>Error in database operation:</b> " . $mysqli->error;
                 exit;
             }
-            $sUrl .= "#tabdept";
 
+            //Changes: 20130822 Husaii - Auto add location access to user
+            $id  =   mysqli_insert_id($mysqli);
+            addUserAccess('department', $id);
+
+            $sUrl .= "#tabdept";
             setSession('department_added', 1);
 
         } else {
@@ -699,7 +734,7 @@ switch($func) {
                     $num    =   mysqli_affected_rows($mysqli);
                     if($num) {
                         // delete user access
-                        $mysqli->query('DELETE FROM user_access WHERE uid = '.$id);
+                        deleteUserAccess($id);
                         setSession('user_deleted', 1);
                         setSession('deleted_user', $user['name']);
                     }
@@ -757,6 +792,23 @@ switch($func) {
                     $uenabled   =   $uenabled ? 1 : 0;
                 }
 
+                //filter values
+                foreach ($sites as $key => $value) {
+                    if(!is_numeric($value) || !$value) {
+                        unset($sites[$key]);
+                    }
+                }
+                foreach ($departments as $key => $value) {
+                    if(!is_numeric($value) || !$value) {
+                        unset($departments[$key]);
+                    }
+                }
+                foreach ($locations as $key => $value) {
+                    if(!is_numeric($value) || !$value) {
+                        unset($locations[$key]);
+                    }
+                }
+
                 if ($uid) {
                     // UPDATE
                     $sql    =   'UPDATE '.
@@ -792,46 +844,24 @@ switch($func) {
                         exit();
                     }
 
-                    //filter values
-                    foreach ($sites as $key => $value) {
-                        if(!is_numeric($value) || !$value) {
-                            unset($sites[$key]);
-                        }
-                    }
-                    foreach ($departments as $key => $value) {
-                        if(!is_numeric($value) || !$value) {
-                            unset($departments[$key]);
-                        }
-                    }
-                    foreach ($locations as $key => $value) {
-                        if(!is_numeric($value) || !$value) {
-                            unset($locations[$key]);
-                        }
-                    }
-                    $sites          =   serialize($sites);
-                    $departments    =   serialize($departments);
-                    $locations      =   serialize($locations);
+                    // Update user access
 
-                    $sql            =   'INSERT INTO `user_access`('.
-                                            '`uid`,'.
-                                            '`sites`,'.
-                                            '`locations`,'.
-                                            '`departments`) '.
-                                        'VALUES(?,?,?,?) '.
-                                        'ON DUPLICATE KEY UPDATE '.
-                                            '`sites` = ?,'.
-                                            '`locations` = ?, '.
-                                            '`departments` = ? ';
+                    // Sites
+                    foreach ($sites as $site_id)
+                    {
+                        addUserAccess('site',$site_id, $uid);
+                    }
 
-                    $stmt           =   $mysqli->prepare($sql);
-                    $stmt->bind_param('issssss', $uid, $sites, $locations, $departments, $sites, $locations, $departments);
-                    $stmt->execute();
+                    // Departments
+                    foreach ($departments as $depid)
+                    {
+                        addUserAccess('department',$depid, $uid);
+                    }
 
-                    if (!$stmt->execute()) {
-                        $errormsg = $mysqli->error;
-                        setSession('error', "Error updating user access: " . $errormsg);
-                        header("Location: edituser.php?id=$uid");
-                        exit();
+                    // Locations
+                    foreach ($locations as $locid)
+                    {
+                        addUserAccess('location',$locid, $uid);
                     }
 
                     setSession('user_updated', 1);
@@ -881,13 +911,24 @@ switch($func) {
                         $uid            =   mysqli_insert_id($mysqli);
 
                         if ($uid) {
-                            $sites          =   serialize($sites);
-                            $departments    =   serialize($departments);
-                            $locations      =   serialize($locations);
+                            //Add user access
+                            // Sites
+                            foreach ($sites as $site_id)
+                            {
+                                addUserAccess('site',$site_id, $uid);
+                            }
 
-                            $stmt           =   $mysqli->prepare('INSERT INTO user_access(`uid`,`sites`,`locations`, `departments`) VALUES(?,?,?,?)');
-                            $stmt->bind_param('isss', $uid, $sites, $locations, $departments);
-                            $stmt->execute();
+                            // Departments
+                            foreach ($departments as $depid)
+                            {
+                                addUserAccess('department',$depid, $uid);
+                            }
+
+                            // Locations
+                            foreach ($locations as $locid)
+                            {
+                                addUserAccess('location',$locid, $uid);
+                            }
                         }
 
                         setSession('added_user', $ufname);
@@ -927,4 +968,114 @@ function cleanfilename($filename) {
     $reserved = preg_quote('\/:*?"<>|', '/'); //characters that are  illegal on any of the 3 major OS's
     //replaces all characters up through space and all past ~ along with the above reserved characters
     return @preg_replace("/([\\x00-\\x20\\x7f-\\xff{$reserved}])/e", "_", $filename);
+}
+
+function addUserAccess($type,$id,$uid=null)
+{
+    global $mysqli;
+    $current_user   =   false;
+
+    if(!$uid)
+    {
+        $uid    =   getSession('uid');
+        $current_user   =   true;
+    }
+
+    if(!$uid || !$id || !is_numeric($id))
+    {
+        return;
+    }
+
+    $uid    =   intval($uid, 10);
+    $id     =   intval($id, 10);
+
+    switch ($type)
+    {
+        case 'site':
+            $table  =   'user_site';
+            $col    =   'siteid';
+            $clause =   "AND siteid = $id ";
+            break;
+
+        case 'department':
+            $table  =   'user_department';
+            $col    =   'depid';
+            $clause =   "AND depid = $id ";
+            break;
+
+        case 'location':
+            $table  =   'user_location';
+            $col    =   'locid';
+            $clause =   "AND locid = $id ";
+            break;
+        default:
+            $table = null;
+            $clause =   '';
+            $col    =   null;
+    }
+
+    if ($table)
+    {
+        //get current access
+        $uaccess    =   getSession('access');
+        $cur_data   =   array();
+
+        if (isset($uaccess[$col]))
+        {
+            $cur_data   =   $uaccess[$col];
+        }
+
+        $cur_data[] =   $id;
+
+        //check if user has access set
+        $stmt =   $mysqli->query("SELECT COUNT(1) FROM `$table` WHERE uid = $uid $clause") or die(mysqli_error($mysqli));
+        list($count)    =   $stmt->fetch_row();
+        if ($count)
+        {
+            $sql    =   "UPDATE `$table` SET `$col` = ? WHERE uid = ?";
+
+        }
+        else
+        {
+            //new
+            $sql    =   "INSERT INTO `$table`(`$col`,uid) VALUES(?,?)";
+        }
+        $stmt   =   $mysqli->prepare($sql) or die(mysqli_error($mysqli).$sql);
+        $stmt->bind_param('si',$id, $uid);
+
+        if(!$stmt->execute())
+        {
+            $errormsg = $mysqli->error;
+            echo "Error in user access data insert: " . $errormsg;
+            exit;
+        }
+
+        //update user session if uid is current user
+        if ($current_user)
+        {
+            setSession('access', getUserAccessList($uid));
+        }
+    }
+}
+
+function deleteUserAccess($uid)
+{
+    global $mysqli;
+
+    $stmt    =   $mysqli->prepare('DELETE FROM user_site WHERE uid=?');
+    $stmt->bind_param('i', $uid);
+
+    $stmt->execute();
+
+    $stmt    =   $mysqli->prepare('DELETE FROM user_department WHERE uid=?');
+    $stmt->bind_param('i', $uid);
+
+    $stmt->execute();
+
+    $stmt    =   $mysqli->prepare('DELETE FROM user_location WHERE uid=?');
+    $stmt->bind_param('i', $uid);
+
+    $stmt->execute();
+
+
 }

@@ -60,11 +60,14 @@ if($result){
 <title>TEMS: User Management</title>
 <link rel="stylesheet" href="css/style.css" type="text/css" media="screen">
 <link rel="stylesheet" href="css/jqueryui/jquery-ui-1.9.2.custom.css" type="text/css" media="screen">
+<link rel="stylesheet" href="datatables/css/demo_table_jui.css" type="text/css" media="screen">
 <link rel="stylesheet" href="css/jquery.multiselect.css" type="text/css" media="screen">
+<link rel="stylesheet" href="css/table_jui.css" type="text/css" media="screen">
 
 <script type="text/javascript" src="js/jquery.min.js"></script>
 <script type="text/javascript" src="js/jquery-ui.min.js"></script>
 <script type="text/javascript" src="js/jquery.multiselect.min.js"></script>
+<script type="text/javascript" src="datatables/jquery.datatables.js"></script>
 </head>
 <body>
     <div id="body_content">
@@ -86,7 +89,7 @@ if($result){
                 <?php endif; ?>
                 <?php if ($admins): ?>
                     <h3>Admin Group</h3>
-                    <table class="full-width tems-table">
+                    <table class="full-width tems-table user-list">
                         <thead>
                             <tr>
                                 <th width="10%">Username</th>
@@ -178,7 +181,7 @@ if($result){
 
                 <?php if ($users): ?>
                     <h3>User Group</h3>
-                    <table class="full-width tems-table">
+                    <table class="full-width tems-table user-list">
                         <thead>
                             <tr>
                                 <th width="10%">Username</th>
@@ -677,6 +680,15 @@ if($result){
                 $('.alert').fadeOut('slow');
             }, 2000);
         }
+
+        $('table.user-list').each(function() {
+            var oTable = $(this).dataTable({
+                bJQueryUI: true,
+                iDisplayLength: 25,
+                sPaginationType: 'full_numbers'
+            });
+            oTable.fnSort( [[1,'asc'] ] );//sort by full name
+        });
     });
     </script>
 </body>

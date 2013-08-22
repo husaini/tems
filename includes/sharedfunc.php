@@ -270,15 +270,17 @@ function getUserAccessList($uid) {
     );
 }
 
-function debug($args,$title='') {
-    if($title) {
-        echo "<h1>$title</h1>";
+if (!function_exists('debug'))
+{
+    function debug($args,$title='') {
+        if($title) {
+            echo "<h1>$title</h1>";
+        }
+        echo '<pre>';
+        print_r($args);
+        echo '</pre>';
     }
-    echo '<pre>';
-    print_r($args);
-    echo '</pre>';
 }
-
 function getNextWorkorderNumber()
 {
     global $mysqli;

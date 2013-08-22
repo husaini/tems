@@ -89,14 +89,16 @@ function data_uri($file, $mime)
     return "data:$mime;base64,$base64";
 }
 
-function debug($data,$title='')
+if (!function_exists('debug'))
 {
-    if(!empty($title)) {
-        echo "<h2>".$title."</h2><hr>";
+    function debug($args,$title='') {
+        if($title) {
+            echo "<h1>$title</h1>";
+        }
+        echo '<pre>';
+        print_r($args);
+        echo '</pre>';
     }
-    echo "<div align='left' style='text-align:left;width:auto;float:none;clear:both;white-space:pre;'>";
-    print_r($data);
-    echo "</div>";
 }
 
 function file_extension($filename)

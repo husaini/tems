@@ -11,17 +11,12 @@
     }
     $uid    =   intval($uid, 10);
     $sql    =   'SELECT '.
-                    'u.*, '.
-                    'ua.sites,'.
-                    'ua.departments,'.
-                    'ua.locations '.
+                    'u.* '.
                 'FROM '.
                     '`user` u '.
-                'LEFT JOIN '.
-                    'user_access ua ON ua.uid = u.id '.
                 'WHERE '.
                     'u.id = '.$uid;
-    $result =   $mysqli->query($sql);
+    $result =   $mysqli->query($sql) or die(mysqli_error($mysqli));
     $user   =   null;
 
     if($result) {
@@ -118,9 +113,7 @@
                                                 <option value="<?php echo $site_id;?>" selected="selected"><?php echo $site_name;?></option>
                                             <?php break; endif; ?>
                                         <?php endforeach; ?>
-                                        <?php if($site_id != $usite_id[count($usite_id)-1]): ?>
-                                            <option value="<?php echo $site_id;?>"><?php echo $site_name;?></option>
-                                        <?php endif; ?>
+
                                     <?php endforeach;?>
                                 <?php endif;?>
                             </select>
@@ -262,6 +255,46 @@
             };
             return false;
         }
+        function getDepartmentLocation(depids){
+            //once departments are initilized or changed, this function will be called
+            //console.log('getSiteLocation')
+            var locationOpt = new SelectOption();
+            locationOpt.url = 'selectget.php';
+            locationOpt.targetId = 'locationid';
+            locationOpt.id = depids;
+            locationOpt.f = 'location';
+            locationOpt.groupOptions = true;
+            locationOpt.get();
+            locationOpt.callback = function(d) {
+                try {
+                    $("#locationid").multiselect('destroy');
+                } catch(err) {
+
+                }
+
+                $("#locationid").attr('multiple','multiple').multiselect({
+                    checkAllText: 'All Locations',
+                    selectedText: "# of # Locations Selected",
+                    noneSelectedText: 'Select Location',
+                    classes: 'site-multi',
+                    minWidth: 335
+                });
+
+                //pre-select locations
+                $("#locationid").multiselect('uncheckAll');
+                <?php if($user->access['locations']): ?>
+                $("#locationid").multiselect("widget").find(":checkbox").each(function(){
+                    <?php foreach($user->access['locations'] as $loc): ?>
+                        if(this.value == <?php echo $loc['id'];?>) {
+                            this.click();
+                        }
+                    <?php endforeach;?>
+                });
+                <?php endif; ?>
+
+            };
+            return false;
+        }
         function getSiteDepartment(siteids) {
             //once sites are initilizes or changed this function will be called
             //console.log('getSiteDepartment')
@@ -291,7 +324,8 @@
                             depids.push(this.value);
                         });
                         if(depids.length > 0) {
-                            getSiteLocation(depids);
+                            //getSiteLocation(depids);
+                            getDepartmentLocation(depids);
                         } else {
                             disableMultiselect('#locationid');
                         }
@@ -319,7 +353,8 @@
                     depids.push(this.value);
                 });
                 if(depids.length > 0) {
-                    getSiteLocation(depids);
+                    //getSiteLocation(depids);
+                    getDepartmentLocation(depids);
                 } else {
                     disableMultiselect('#locationid');
                 }
@@ -331,7 +366,8 @@
                         depids.push(this.value);
                     });
                     if(depids.length > 0) {
-                        getSiteLocation(depids);
+                        //getSiteLocation(depids);
+                        getDepartmentLocation(depids);
                     } else {
                         disableMultiselect('#locationid');
                     }

@@ -50,7 +50,7 @@ if ($uaccess) {
             $uloc_ids[]    =   $uloc['id'];
         }
         if ($uloc_ids) {
-            $loc_opt   =   ' AND sl.id IN('.implode(',', $uloc_ids).') ';
+            $loc_opt   =   ' AND dl.id IN('.implode(',', $uloc_ids).') ';
         }
     }
     if(isset($uaccess['departments'])) {
@@ -154,23 +154,22 @@ switch($f) {
 
     case "location":
         $sql    =   'SELECT '.
-                        's.name AS sitename,'.
-                        'sd.name AS departmentname,'.
-                        'sd.siteid,'.
-                        'sl.depid,'.
-                        'sl.id,'.
-                        'sl.name '.
+                        'dl.id,'.
+                        'dl.name AS location, '.
+                        'sd.name AS department,'.
+                        'sd.id AS department_id '.
                     'FROM '.
-                        'site_location sl , site_department sd '.
+                        'department_location dl '.
                     'INNER JOIN '.
-                        'site s ON s.id = sd.siteid '.
-                    'WHERE '.
-                        "sl.depid=sd.id AND sd.id IN($ids) ".
+                        'site_department sd ON sd.id = dl.depid '.
+                    'WHERE 1 '.
                     'AND '.
-                        "sl.id <>  '$ie' ".
+                        "sd.id IN($ids) ".
+                    'AND '.
+                        "dl.id <>  '$ie' ".
                         $loc_opt.
                     'ORDER BY '.
-                        'sl.name';
+                        'dl.name';
         break;
     case "department":
 
@@ -215,7 +214,7 @@ switch($f) {
         break;
 }
 
-#echo $sql;
+//echo $sql;
 
 $result     =   $mysqli->query($sql) or die(mysqli_error($mysqli).' '.$sql);
 $response   =   array();
@@ -248,31 +247,33 @@ if ($result) {
 
         $response   =   $sites;
     }elseif ($group_result && $f=='location') {
-        $deps  =   array();
+        $locs  =   array();
         $rows   =   array();
 
         while ($row = $result->fetch_assoc()) {
-            if(!isset($deps[$row['depid']])) {
-                $deps[$row['depid']]['site']    =   $row['departmentname'];
+            if(!isset($locs[$row['department_id']])) {
+                $locs[$row['department_id']]['site']    =   $row['department'];
             }
             $rows[] =   $row;
         }
-        asort($deps);
+        asort($locs);
 
-        foreach ($deps as $dep_id => $d) {
+        //print_r($rows);
+
+        foreach ($locs as $department_id => $l) {
             foreach ($rows as $row) {
-                if($row['depid'] == $dep_id) {
-                    $d['options'][] =   array(
-                        'optionDisplay' =>  $row['name'],
+                if($row['department_id'] == $department_id) {
+                    $l['options'][] =   array(
+                        'optionDisplay' =>  $row['location'],
                         'optionValue'   =>  $row['id'],
                     );
                 }
             }
-            $deps[$dep_id] = $d;
+            $locs[$department_id] = $l;
         }
-        //print_r($sites);
 
-        $response   =   $deps;
+        $response   =   $locs;
+
     } else {
         while ($row = $result->fetch_assoc()) {
             $response[] =   array(

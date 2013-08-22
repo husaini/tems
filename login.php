@@ -46,10 +46,10 @@ $_SESSION['challenge'] = md5(mt_rand());
             <div class="content">
                 <form id="frmlogin" method="post" action="logincheck.php">
                     <p>
-                        <input autocomplete="false" required="required" type="text" id="loginname" name="loginname" placeholder="Username" />
+                        <input required="required" type="text" id="loginname" name="loginname" placeholder="Username" />
                     </p>
                     <p>
-                        <input autocomplete="false" required="required" type="password" id="loginpass" name="loginpass" placeholder="Password" />
+                        <input autocomplete="off" required="required" type="password" id="loginpass" name="loginpass" placeholder="Password" />
                     </p>
                     <p>
                         <input class="loginbtn" type="submit" value="Submit" />

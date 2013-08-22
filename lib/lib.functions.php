@@ -318,23 +318,25 @@ function paginate($page = 1, $total_items, $limit = 20, $adjacents = 1, $targetp
     }
     return $pagination;
 }
-
-function recursive_array_search($haystack, $needle, $index = null)
+if (!function_exists('recursive_array_search'))
 {
-    $array_iterator = new RecursiveArrayIterator($haystack);
-    $iterator       = new RecursiveIteratorIterator($array_iterator);
-
-    while($iterator->valid())
+    function recursive_array_search($haystack, $needle, $index = null)
     {
-        if (((isset($index) && ($iterator->key() == $index)) || (!isset($index))) && ($iterator->current() == $needle))
+        $array_iterator = new RecursiveArrayIterator($haystack);
+        $iterator       = new RecursiveIteratorIterator($array_iterator);
+
+        while($iterator->valid())
         {
-            return $array_iterator->key();
+            if (((isset($index) && ($iterator->key() == $index)) || (!isset($index))) && ($iterator->current() == $needle))
+            {
+                return $array_iterator->key();
+            }
+
+            $iterator->next();
         }
 
-        $iterator->next();
+        return false;
     }
-
-    return false;
 }
 
 function redirect($url)

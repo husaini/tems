@@ -107,12 +107,22 @@
                                     <?php optionize($sites, $user->siteid);?>
                                 <?php else: ?>
                                     <?php $usite_id = array(); foreach ($sites as $site_id => $site_name): ?>
-                                        <?php foreach ($user->access['sites'] as $usite): ?>
-                                            <?php if ($usite['id'] == $site_id): ?>
-                                                <?php $usite_id[] =   $site_id; ?>
-                                                <option value="<?php echo $site_id;?>" selected="selected"><?php echo $site_name;?></option>
-                                            <?php break; endif; ?>
-                                        <?php endforeach; ?>
+                                        <?php
+                                            $found = false;
+                                            foreach ($user->access['sites'] as $usite)
+                                            {
+                                                if ($usite['id'] == $site_id)
+                                                {
+                                                    $found = true;
+                                                    break;
+                                                }
+                                            }
+                                        ?>
+                                        <?php if ($found):?>
+                                            <option value="<?php echo $site_id;?>" selected="selected"><?php echo $site_name;?></option>
+                                        <?php else: ?>
+                                            <option value="<?php echo $site_id;?>"><?php echo $site_name;?></option>
+                                        <?php endif;?>
 
                                     <?php endforeach;?>
                                 <?php endif;?>

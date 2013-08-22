@@ -184,8 +184,8 @@ if($result){
                                 <th width="10%">Username</th>
                                 <th width="17%">Fullname</th>
                                 <th width="17%">Site</th>
-                                <th width="17%">Location</th>
                                 <th width="17%">Department</th>
+                                <th width="17%">Location</th>
                                 <th width="17%">Last Login</th>
                                 <th width="5%">Action</th>
                             </tr>
@@ -215,22 +215,7 @@ if($result){
                                         <?php endif; ?>
                                     <?php endif; ?>
                                 </td>
-                                <td>
-                                    <?php if($u['access']['locations']): ?>
-                                        <?php if($total_locations && count($u['access']['locations']) == $total_locations): ?>
-                                            All
-                                        <?php else: ?>
-                                            <?php $count=1; foreach ($u['access']['locations'] as $loc): ?>
-                                                <a href="editloc.php?id=<?php echo $loc['id'];?>&amp;tab=tabloc"><?php echo $loc['name']; ?></a>
-                                                <?php if($count < count($u['access']['locations'])): ?>
-                                                    ,
-                                                <?php endif; ?>
-                                            <?php $count++; endforeach; ?>
-                                        <?php endif; ?>
-                                    <?php else: ?>
-                                        None
-                                    <?php endif; ?>
-                                </td>
+
                                 <td>
                                     <?php if($u['access']['departments']): ?>
                                         <?php if(count($u['access']['departments']) == $total_departments): ?>
@@ -241,6 +226,22 @@ if($result){
                                                     <?php echo $dept['name']; ?>
                                                 </a>
                                                 <?php if($count < count($u['access']['departments'])): ?>
+                                                    ,
+                                                <?php endif; ?>
+                                            <?php $count++; endforeach; ?>
+                                        <?php endif; ?>
+                                    <?php else: ?>
+                                        None
+                                    <?php endif; ?>
+                                </td>
+                                <td>
+                                    <?php if($u['access']['locations']): ?>
+                                        <?php if($total_locations && count($u['access']['locations']) == $total_locations): ?>
+                                            All
+                                        <?php else: ?>
+                                            <?php $count=1; foreach ($u['access']['locations'] as $loc): ?>
+                                                <a href="editloc.php?id=<?php echo $loc['id'];?>&amp;tab=tabloc"><?php echo $loc['name']; ?></a>
+                                                <?php if($count < count($u['access']['locations'])): ?>
                                                     ,
                                                 <?php endif; ?>
                                             <?php $count++; endforeach; ?>

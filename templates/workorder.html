@@ -1,0 +1,316 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Strict//EN"
+  "http://www.w3.org/TR/xhtml1/DTD/xhtml1-strict.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml" xml:lang="en" lang="en">
+<head>
+<link rel="stylesheet" href="css/workorder/pdf.css" type="text/css">
+<link rel="stylesheet" href="css/workorder/print.css" type="text/css">
+</head>
+<body>
+    <table cellspacing="0" cellpadding="0" class="workorder">
+        <tr>
+            <td colspan="15" class="no-border"><h2>BORANG ADUAN KEROSAKAN / ARAHAN KERJA (WORK ORDER)</h2></td>
+            <td nowrap="nowrap" class="no-border" style="page-break-inside: avoid">
+                <table class="inner-table">
+                    <tr>
+                        <td><img align="left" src="images/uitm_logo.png" width="140"></td>
+                        <td><img align="left"  src="images/alammedik_logo.png" width="140"></td>
+                    </tr>
+                </table>
+            </td>
+        </tr>
+        <tr>
+            <td colspan="16" class="no-border">Tandakan <input disabled="disabled" type="checkbox" checked="checked" class="chk-demo"> atau potong mana-mana yang tidak berkenaan</td>
+        </tr>
+        <tr>
+            <td colspan="16" class="no-border">&nbsp;</td>
+        </tr>
+        <tr>
+            <td nowrap="nowrap" colspan="16">
+                <table cellspacing="0" cellpadding="0"  class="inner-table bordered thick-border">
+                    <tr>
+                        <td class="gray center row-heading1 bordered thick-border-right">Tarikh Aduan</td>
+                        <td class="gray center row-heading1 bordered">Waktu</td>
+                        <td nowrap="nowrap" rowspan="3" class="gray bordered thick-border v-center">
+                            <input type="checkbox" {%if data.is_preventive %}checked="checked"{% endif %} /> Preventive
+                            <br>
+                            <input type="checkbox" {%if data.is_corrective %}checked="checked"{% endif %}/> Kerosakan
+                        </td>
+                        <td colspan="19" class="gray center row-heading1 bordered thick-border">No Aduan</td>
+                    </tr>
+                    <tr>
+                        <td rowspan="2" class="gray bordered center thick-border "><strong>{{data.report_date}}</strong></td>
+                        <td rowspan="2" class="gray bordered center thick-border bordered-bottom"><strong>{{data.report_time}}</strong></td>
+                        <td class="gray center wo-no bordered">{{site_arr[0]}}</td>
+                        <td class="gray center wo-no bordered">{{site_arr[1]}}</td>
+                        {% for x in 0..4 %}
+                            <td width="16" class="gray center wo-no bordered">{{tems_no_arr[x]}}</td>
+                        {% endfor %}
+                        <td class="gray center wo-no bordered">-</td>
+                        <td class="gray center wo-no bordered">{{year_arr[0]}}</td>
+                        <td class="gray center wo-no bordered">{{year_arr[1]}}</td>
+                        <td class="gray center wo-no bordered">-</td>
+                        <td class="gray center wo-no bordered">B</td>
+                        <td class="gray center wo-no bordered">E</td>
+                        <td class="gray center wo-no bordered">M</td>
+                        {% for x in 0..4 %}
+                            <td class="gray center wo-no {%if x < 4 %}bordered{% else %}bordered right-bordered thick-border{% endif %}">{{wo_no_arr[x]}}</td>
+                        {% endfor %}
+                    </tr>
+                    <tr>
+                        <td colspan="7" class="gray bordered thick-border bordered-bottom">Nama Pengadu</td>
+                        <td class="gray data-sep bordered thick-border bordered-bottom">:</td>
+                        <td colspan="11" class="gray bordered thick-border"><strong>{{data.reporter|stripslashes}}</strong></td>
+                    </tr>
+                    <tr>
+                        <td colspan="3">
+                            <table class="inner-table">
+                                <tr>
+                                    <td nowrap="nowrap">Jabatan</td>
+                                    <td class="data-sep">:</td>
+                                    <td><strong>{{data.department|stripslashes}}</strong></td>
+                                </tr>
+                                <tr>
+                                    <td nowrap="nowrap">Lokasi</td>
+                                    <td class="data-sep">:</td>
+                                    <td><strong>{{data.location|stripslashes}}</strong></td>
+                                </tr>
+                                <tr>
+                                    <td nowrap="nowrap">TEMS No</td>
+                                    <td class="data-sep">:</td>
+                                    <td><strong>{{tems_no}}</strong></td>
+                                </tr>
+                                <tr>
+                                    <td nowrap="nowrap">Status Peralatan</td>
+                                    <td class="data-sep">:</td>
+                                    <td>
+                                        <label class="inline">
+                                            <input type="checkbox" /> Kontrak
+                                        </label>
+
+                                        <label class="inline">
+                                            <input type="checkbox" /> Bukan Kontrak
+                                        </label>
+                                    </td>
+                                </tr>
+                                <tr>
+                                    <td nowrap="nowrap">Butiran Aduan</td>
+                                    <td class="data-sep">:</td>
+                                    <td><strong>{{data.description|stripslashes|nl2br}}</strong></td>
+                                </tr>
+                            </table>
+                        </td>
+                        <td colspan="19">
+                            <table width="100%" class="inner-table">
+                                <tr>
+                                    <td nowrap="nowrap">Peralatan</td>
+                                    <td class="data-sep">:</td>
+                                    <td><strong>{{data.remarks|stripslashes}}</strong></td>
+                                </tr>
+                                <tr>
+                                    <td nowrap="nowrap">Jenama / Model</td>
+                                    <td class="data-sep">:</td>
+                                    <td><strong>{{data.model|stripslashes}}</strong></td>
+                                </tr>
+                                <tr>
+                                    <td nowrap="nowrap">No Siri</td>
+                                    <td class="data-sep">:</td>
+                                    <td><strong>{{data.serialno|stripslashes}}</strong></td>
+                                </tr>
+                                <tr>
+                                    <td colspan="3" nowrap="nowrap">&nbsp;</td>
+                                </tr>
+                                <tr>
+                                    <td colspan="3" nowrap="nowrap" class="center bordered thick-border no-bottom-border">**Pengesahan Kehadiran Kontraktor Tangani Kerosakan</td>
+                                </tr>
+                                <tr>
+                                    <td colspan="3" nowrap="nowrap" class="bordered thick-border signature no-top-border no-bottom-border">&nbsp;</td>
+                                </tr>
+                                <tr>
+                                    <td colspan="3" nowrap="nowrap" class="bordered thick-border signature-desc">Tandatangan Pengadu, Tarikh &amp; Cop Rasmi</td>
+                                </tr>
+                            </table>
+                        </td>
+                    </tr>
+                </table>
+            </td>
+        </tr>
+        <tr>
+            <td colspan="16" class="center row-heading1 gray bordered thick-border">TINDAKAN</td>
+        </tr>
+        <tr>
+            <td colspan="16">
+                <table width="100%" cellpadding="0" cellspacing="0" class="inner-table bordered thick-border no-top-border">
+                    <tr>
+                        <td colspan="8" class="bordered thick-border center">Tarikh Siasatan</td>
+                        <td colspan="4" class="bordered thick-border center">Waktu</td>
+                        <td rowspan="3" class="bordered thick-border v-center">
+                            <label><input type="checkbox" /> AM</label>
+                            <br>
+                            <label><input type="checkbox" /> PM</label>
+                        </td>
+                        <td rowspan="3" class="bordered v-center">
+                            <label><input type="checkbox" /> Jangka Mula Kerja</label>
+                            <br>
+                            <label><input type="checkbox" /> Jangka Siap Kerja</label>
+                        </td>
+                        <td rowspan="3" width="144" class="no-pad">
+                            <table class="inner-table">
+                                <tr>
+                                    <td class="empty-box thick-border dotted-border-right border-bottom-solid">&nbsp;</td>
+                                    <td class="empty-box thick-border dotted-border-right border-bottom-solid">&nbsp;</td>
+                                    <td class="empty-box thick-border dotted-border-right border-bottom-solid">&nbsp;</td>
+                                    <td class="empty-box thick-border dotted-border-right border-bottom-solid">&nbsp;</td>
+                                    <td class="empty-box thick-border dotted-border-right border-bottom-solid">&nbsp;</td>
+                                    <td class="empty-box thick-border dotted-border-right border-bottom-solid">&nbsp;</td>
+                                    <td class="empty-box thick-border dotted-border-right border-bottom-solid">&nbsp;</td>
+                                    <td class="empty-box thick-border dotted-border-right border-bottom-solid thick-border-right">&nbsp;</td>
+                                </tr>
+                                <tr>
+                                    <td class="empty-box thick-border dotted-border-right border-bottom-solid">&nbsp;</td>
+                                    <td class="empty-box thick-border dotted-border-right border-bottom-solid">&nbsp;</td>
+                                    <td class="empty-box thick-border dotted-border-right border-bottom-solid">&nbsp;</td>
+                                    <td class="empty-box thick-border dotted-border-right border-bottom-solid">&nbsp;</td>
+                                    <td class="empty-box thick-border dotted-border-right border-bottom-solid">&nbsp;</td>
+                                    <td class="empty-box thick-border dotted-border-right border-bottom-solid">&nbsp;</td>
+                                    <td class="empty-box thick-border dotted-border-right border-bottom-solid">&nbsp;</td>
+                                    <td class="empty-box thick-border dotted-border-right border-bottom-solid thick-border-right">&nbsp;</td>
+                                </tr>
+                                <tr>
+                                    <td class="empty-box thick-border dotted-border-right">&nbsp;</td>
+                                    <td class="empty-box thick-border dotted-border-right">&nbsp;</td>
+                                    <td class="empty-box thick-border dotted-border-right">&nbsp;</td>
+                                    <td class="empty-box thick-border dotted-border-right">&nbsp;</td>
+                                    <td class="empty-box thick-border dotted-border-right">&nbsp;</td>
+                                    <td class="empty-box thick-border dotted-border-right">&nbsp;</td>
+                                    <td class="empty-box thick-border dotted-border-right">&nbsp;</td>
+                                    <td class="empty-box thick-border dotted-border-right thick-border-right">&nbsp;</td>
+                                </tr>
+                            </table>
+                        </td>
+                        <td rowspan="3" class="bordered"><u>Siasasatan Oleh </u>:</td>
+                    </tr>
+                    <tr>
+                        <td class="empty-box thick-border dotted-border-right border-bottom-solid">&nbsp;</td>
+                        <td class="empty-box thick-border dotted-border-right border-bottom-solid">&nbsp;</td>
+                        <td class="empty-box thick-border dotted-border-right border-bottom-solid">&nbsp;</td>
+                        <td class="empty-box thick-border dotted-border-right border-bottom-solid">&nbsp;</td>
+                        <td class="empty-box thick-border dotted-border-right border-bottom-solid">&nbsp;</td>
+                        <td class="empty-box thick-border dotted-border-right border-bottom-solid">&nbsp;</td>
+                        <td class="empty-box thick-border dotted-border-right border-bottom-solid">&nbsp;</td>
+                        <td class="empty-box thick-border dotted-border-right border-bottom-solid thick-border-right">&nbsp;</td>
+                        <td class="empty-box thick-border dotted-border-right border-bottom-solid">&nbsp;</td>
+                        <td class="empty-box thick-border dotted-border-right border-bottom-solid">&nbsp;</td>
+                        <td class="empty-box thick-border dotted-border-right border-bottom-solid">&nbsp;</td>
+                        <td class="empty-box thick-border dotted-border-right border-bottom-solid thick-border-right">&nbsp;</td>
+                    </tr>
+                    <tr>
+                        <td class="empty-box thick-border dotted-border-right">&nbsp;</td>
+                        <td class="empty-box thick-border dotted-border-right">&nbsp;</td>
+                        <td class="empty-box thick-border dotted-border-right">&nbsp;</td>
+                        <td class="empty-box thick-border dotted-border-right">&nbsp;</td>
+                        <td class="empty-box thick-border dotted-border-right">&nbsp;</td>
+                        <td class="empty-box thick-border dotted-border-right">&nbsp;</td>
+                        <td class="empty-box thick-border dotted-border-right">&nbsp;</td>
+                        <td class="empty-box thick-border dotted-border-right thick-border-right">&nbsp;</td>
+                        <td class="empty-box thick-border dotted-border-right">&nbsp;</td>
+                        <td class="empty-box thick-border dotted-border-right">&nbsp;</td>
+                        <td class="empty-box thick-border dotted-border-right">&nbsp;</td>
+                        <td class="empty-box thick-border dotted-border-right thick-border-right">&nbsp;</td>
+                    </tr>
+                </table>
+            </td>
+        </tr>
+        <tr>
+            <td colspan="16">
+                <table class="inner-table bordered thick-border no-bottom-border">
+                    <tr>
+                        <td width="33%" class="bordered no-top-border no-bottom-border thick-border"><u>Alam Medik Sdn Bhd </u>:</td>
+                        <td width="33%" class="bordered no-top-border no-bottom-border thick-border"><u>Bahagian Pengurusan Fasiliti</u></td>
+                        <td width="33%" class="bordered no-top-border no-bottom-border thick-border"><u>Ulasan</u></td>
+                    </tr>
+                    <tr>
+                        <td class="empty-content bordered no-bottom-border no-top-border thick-border">&nbsp;</td>
+                        <td class="empty-content bordered no-bottom-border no-top-border thick-border">&nbsp;</td>
+                        <td class="empty-content bordered no-bottom-border no-top-border thick-border">&nbsp;</td>
+                    </tr>
+                </table>
+            </td>
+        </tr>
+        <tr>
+            <td colspan="16">
+                <table class="inner-table bordered gray thick-border">
+                    <tr>
+                        <td colspan="6" class="bordered thick-border row-heading1">Tindakan Pembaikian Seterusnya (Jika Ada) :</td>
+                    </tr>
+                    <tr>
+                        <td class="bordered thick-border-bottom row-heading1">No</td>
+                        <td class="bordered thick-border-bottom row-heading1">Keterangan</td>
+                        <td class="bordered thick-border-bottom row-heading1">Kuantiti</td>
+                        <td class="bordered thick-border-bottom row-heading1">Harga Seunit</td>
+                        <td class="bordered thick-border-bottom row-heading1">Jumlah Harga</td>
+                        <td class="bordered thick-border-bottom row-heading1">Jaminan</td>
+                    </tr>
+                    {% for x in 0..7 %}
+                        <tr>
+                            <td class="bordered">&nbsp;</td>
+                            <td class="bordered">&nbsp;</td>
+                            <td class="bordered">&nbsp;</td>
+                            <td class="bordered">&nbsp;</td>
+                            <td class="bordered">&nbsp;</td>
+                            <td class="bordered">&nbsp;</td>
+                        </tr>
+                    {% endfor %}
+                    <tr>
+                        <td colspan="4" class="bordered thick-border">Arahan Kerja Oleh /<br />
+                            Setuju Harga Pembaikian<br />
+                            (BAHAGIAN PENGURUSAN FASILITI UiTM)
+                        </td>
+                        <td colspan="2" class="bordered thick-border">
+                            <p>Kerja dilakukan Oleh:</p>
+                            <br>
+                            <label><input type="checkbox" /> ALAM MEDIK SDN BHD</label>
+                            <br>
+                            <label><input type="checkbox" /> WARRANTI PRINSIPAL PERALATAN</label>
+                            <br>
+                            <table class="inner-table other-input">
+                                <tr>
+                                    <td class="dotted-top">&nbsp;</td>
+                                </tr>
+                            </table>
+                            <br>
+                        </td>
+                    </tr>
+                </table>
+            </td>
+        </tr>
+        <tr>
+            <td colspan="16" class="no-pad no-top-border">
+                <table class="inner-table bordered thick-border  no-top-border">
+                    <tr>
+                        <td class="center row-heading1 pad-4">PENGESAHAN KERJA</h2></td>
+                    </tr>
+                    <tr>
+                        <td class="bordered pad-4">Kerja-kerja tersebut telah disiapkan pada :</td>
+                    </tr>
+                </table>
+            </td>
+        </tr>
+        <tr>
+            <td colspan="16">
+                <table class="inner-table bordered thick-border no-top-border">
+                    <tr>
+                        <td width="33%" class="center row-heading1 thick-border-right">ALAM MEDIK SDN BHD</td>
+                        <td width="33%" class="center thick-border-right row-heading1">PENGGUNA</td>
+                        <td width="33%" class="center row-heading1">BAHAGIAN PENGURUSAN FASILITI</td>
+                    </tr>
+                    <tr>
+                        <td class="bordered thick-border-right empty-content">&nbsp;</td>
+                        <td class="bordered thick-border-right">&nbsp;</td>
+                        <td class="bordered">&nbsp;</td>
+                    </tr>
+                </table>
+            </td>
+        </tr>
+    </table>
+</body>
+</html>

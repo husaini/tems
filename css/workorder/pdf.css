@@ -1,0 +1,178 @@
+body,html,table,td,th,label {
+    font-family: Arial,sans;
+    font-size: 12px;
+}
+.logo {
+    display: inline-block;
+    width: 189px;
+    height: auto;
+}
+.logo.alamdedik {
+    background: url("/../images/alammedik_logo.png") no-repeat;
+}
+.logo.uitm {
+    background: url("../images/uitm_logo.png") no-repeat;
+}
+table {
+    margin:0;
+    padding:0;
+}
+td {
+    vertical-align: top;
+    page-break-inside:avoid
+}
+
+td.row-heading1 {
+    font-weight: bold;
+}
+table.bordered,
+td.bordered {
+    border:1px solid black;
+    border-collapse: collapse;
+    border-spacing: 0;
+}
+
+.no-top-border {
+    border-top: none !important;
+}
+
+td.bordered {
+    border-collapse: separate;
+}
+
+td.right-bordered {
+    border-right: 1px solid black;
+}
+
+table.bordered.thick-border,
+td.bordered.thick-border,
+td.right-bordered.thick-border {
+    border-width: 2px;
+}
+
+.border-separate {
+    border-collapse: separate;
+}
+
+table.inner-table {
+    width: 100%;
+    border-spacing: 0;
+    border-collapse: collapse;
+}
+table.workorder {
+    max-width: 676px;
+    width: 878.8px;
+    border-collapse: collapse;
+}
+
+table.gray,
+table.gray td,
+table.gray th,
+td.gray,
+th.gray {
+    background-color: #d8d8d8;
+}
+
+
+table.margin-top {
+    margin-top: -2px;
+}
+td.wo-no {
+    width:20px;
+}
+th.center,
+td.center {
+    text-align: center;
+    vertical-align: middle;
+}
+
+td.v-center {
+    vertical-align: middle;
+}
+
+td.top {
+    vertical-align: top;
+}
+td.data-sep {
+    width:16px;
+    text-align: center;
+    white-space: nowrap;
+}
+td.signature-box {
+    padding: 10px;
+    border-bottom: 1px solid black !important;
+}
+table.no-border,
+td.no-border {
+    border: none !important;
+}
+table.no-top-border,
+td.no-top-border {
+    border-top: none !important;
+}
+table.no-bottom-border,
+td.no-bottom-border {
+    border-bottom: none !important;
+}
+td.bordered-bottom {
+    border-top: none;
+    border-left: none;
+    border-right: none;
+}
+td.bordered-right {
+    border-right: 1px solid black !important;
+}
+td.no-pad {
+    padding:0;
+    border-collapse: collapse;
+}
+td.empty-box {
+    width:16px;
+    white-space: nowrap;
+}
+td.empty-content {
+    height: 100px;
+}
+td.dotted-border-right {
+    border-style: dotted;
+    border-width: 1px;
+}
+td.thick-border-right {
+    border-right-width: 2px !important;
+    border-right-style: solid;
+}
+td.border-bottom-solid {
+    border-bottom-style: solid;
+}
+td.thick-border-bottom {
+    border-bottom-width: 2px;
+}
+.signature {
+    height: 60px;
+    vertical-align: top;
+    padding: 10px;
+    text-align: center;
+}
+.signature-desc {
+    border-top: 1px dotted black !important;
+    padding:10px;
+    padding-top:0;
+    margin-top:0;
+    vertical-align: top;
+    text-align: center;
+}
+.pad-4 {
+    padding:4px !important;
+}
+.pad-10 {
+    padding:10px !important;
+}
+.dotted-top {
+    border-top: 1px dotted black;
+}
+.other-input {
+    display: block;
+    width:100%;
+    padding-top: 10px;
+    margin-top: 20px;
+}

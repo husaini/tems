@@ -1,0 +1,202 @@
+body,html {
+    background: #227990;
+    color: white;
+    font: 10pt tahoma,Arial,sans;
+    height: 100%;
+    margin:0;
+    padding:0;
+}
+
+div {
+    display: block;
+}
+.round {
+    -webkit-border-radius: 10px;
+    -moz-border-radius:    10px;
+    border-radius: 10px;
+}
+#loginall {
+    width: 600px;
+    height: 320px;
+    padding: 0;
+    position: absolute;
+    margin: -180px auto auto -210px;
+    left: 50%;
+    top: 50% }
+
+#loginheaderbox {
+    width:424px;
+    overflow: hidden;
+    text-indent:-999999px;
+}
+#loginheaderbox .box-shadow{
+    clear: both;
+    display:block;
+    height: 39px;
+    width:424px;
+    background: url(../images/box_shadow.png) center top no-repeat;
+}
+#loginheaderbox .logo-content {
+    width:100%;
+    background: white;
+
+    -webkit-border-radius: 10px;
+    -moz-border-radius:    10px;
+    border-radius: 10px;
+
+    /* Prevent background color leak outs */
+    -webkit-background-clip: padding-box;
+    -moz-background-clip:    padding;
+    background-clip:         padding-box;
+
+    border: 1px solid #ccc;
+    padding-bottom: 10px;
+}
+#loginheaderbox .logo {
+    display: block;
+    width:212px;
+    height:73px;
+    background: url(../images/logo.png) no-repeat;
+    text-align: center;
+    margin: 0 auto;
+    margin-top: 4px;
+}
+#logininputbox .content {
+    background: white;
+    color: black;
+    padding: 20px;
+}
+#logininputbox .box-shadow{
+    clear: both;
+    display:block;
+    height: 39px;
+    width:424px;
+    background: url(../images/box_shadow.png) center top no-repeat;
+}
+
+.box-header {
+    font-size: 23px;
+    height: 45px;
+    line-height:45px;
+    vertical-align: middle;
+    border: 1px solid #044f6d;
+    text-indent: 20px;
+    text-shadow: 0px 2px 1px rgba(0,0,0,0.8);
+    padding:0;
+    margin:0;
+    background:#01486e  url(../images/loginbox_header_bg.png) repeat-x;
+    color: white;
+
+    -webkit-border-top-left-radius: 10px;
+    -webkit-border-top-right-radius: 10px;
+    -webkit-border-bottom-right-radius: 0px;
+    -webkit-border-bottom-left-radius: 0px;
+
+    -moz-border-radius-topleft: 10px;
+    -moz-border-radius-topright: 10px;
+    -moz-border-radius-bottomright: 0px;
+    -moz-border-radius-bottomleft: 0px;
+
+    border-top-left-radius: 10px;
+    border-top-right-radius: 10px;
+    border-bottom-right-radius: 0px;
+    border-bottom-left-radius: 0px;
+}
+
+#loginerror {
+    background: #FFF067;
+    color: #F31800;
+    font-weight: bold;
+    padding: 10px;
+    width:404px;
+}
+
+#logininputbox {
+    width:424px;
+    margin-top: -10px;
+}
+#logininputbox p {
+    margin:0;
+}
+#logininputbox input[type="text"],
+#logininputbox input[type="password"] {
+    width: 368px;
+    display: inline-block;
+    height: 20px;
+    padding: 4px 6px;
+    margin-bottom: 10px;
+    font-size: 14px;
+    line-height: 20px;
+    color: #555555;
+    -webkit-border-radius: 4px;
+    -moz-border-radius: 4px;
+    border-radius: 4px;
+    vertical-align: middle;
+    border: 1px solid #9c9d8f;
+    outline: none;
+    background: white;
+
+    -moz-box-shadow:   inset 0px 2px 5px rgba(0,0,0,0.3);
+   -webkit-box-shadow: inset 0px 2px 5px rgba(0,0,0,0.3);
+   box-shadow:         inset 0px 2px 5px rgba(0,0,0,0.3);
+}
+#logininputbox input[type="submit"],
+#logininputbox button[type="submit"] {
+    width: 100%;
+    background: rgb(0,87,109);
+    background: url(data:image/svg+xml;base64,PD94bWwgdmVyc2lvbj0iMS4wIiA/Pgo8c3ZnIHhtbG5zPSJodHRwOi8vd3d3LnczLm9yZy8yMDAwL3N2ZyIgd2lkdGg9IjEwMCUiIGhlaWdodD0iMTAwJSIgdmlld0JveD0iMCAwIDEgMSIgcHJlc2VydmVBc3BlY3RSYXRpbz0ibm9uZSI+CiAgPGxpbmVhckdyYWRpZW50IGlkPSJncmFkLXVjZ2ctZ2VuZXJhdGVkIiBncmFkaWVudFVuaXRzPSJ1c2VyU3BhY2VPblVzZSIgeDE9IjAlIiB5MT0iMCUiIHgyPSIwJSIgeTI9IjEwMCUiPgogICAgPHN0b3Agb2Zmc2V0PSIwJSIgc3RvcC1jb2xvcj0iIzAwNTc2ZCIgc3RvcC1vcGFjaXR5PSIxIi8+CiAgICA8c3RvcCBvZmZzZXQ9IjEwMCUiIHN0b3AtY29sb3I9IiMwMDJkNDIiIHN0b3Atb3BhY2l0eT0iMSIvPgogIDwvbGluZWFyR3JhZGllbnQ+CiAgPHJlY3QgeD0iMCIgeT0iMCIgd2lkdGg9IjEiIGhlaWdodD0iMSIgZmlsbD0idXJsKCNncmFkLXVjZ2ctZ2VuZXJhdGVkKSIgLz4KPC9zdmc+);
+    background: -moz-linear-gradient(top, rgba(0,87,109,1) 0%, rgba(0,45,66,1) 100%);
+    background: -webkit-gradient(linear, left top, left bottom, color-stop(0%,rgba(0,87,109,1)), color-stop(100%,rgba(0,45,66,1)));
+    background: -webkit-linear-gradient(top, rgba(0,87,109,1) 0%,rgba(0,45,66,1) 100%);
+    background: -o-linear-gradient(top, rgba(0,87,109,1) 0%,rgba(0,45,66,1) 100%);
+    background: -ms-linear-gradient(top, rgba(0,87,109,1) 0%,rgba(0,45,66,1) 100%);
+    background: linear-gradient(to bottom, rgba(0,87,109,1) 0%,rgba(0,45,66,1) 100%);
+    filter: progid:DXImageTransform.Microsoft.gradient( startColorstr='#00576d', endColorstr='#002d42',GradientType=0 );
+
+    -webkit-border-radius: 4px;
+    -moz-border-radius:    4px;
+    border-radius: 4px;
+    border: 1px solid #005d74;
+    height: 36px;
+    line-height: 36px;
+    vertical-align: middle;
+    color: white;
+    text-shadow: 0px 2px 1px rgba(0,0,0,0.8);
+    font-weight: bold;
+    font-size: 24px;
+    cursor: pointer;
+    cursor: hand;
+}
+#logininputbox input[type="submit"]:hover,
+#logininputbox button[type="submit"]:hover {
+    background: rgb(7,121,151);
+    background: url(data:image/svg+xml;base64,PD94bWwgdmVyc2lvbj0iMS4wIiA/Pgo8c3ZnIHhtbG5zPSJodHRwOi8vd3d3LnczLm9yZy8yMDAwL3N2ZyIgd2lkdGg9IjEwMCUiIGhlaWdodD0iMTAwJSIgdmlld0JveD0iMCAwIDEgMSIgcHJlc2VydmVBc3BlY3RSYXRpbz0ibm9uZSI+CiAgPGxpbmVhckdyYWRpZW50IGlkPSJncmFkLXVjZ2ctZ2VuZXJhdGVkIiBncmFkaWVudFVuaXRzPSJ1c2VyU3BhY2VPblVzZSIgeDE9IjAlIiB5MT0iMCUiIHgyPSIwJSIgeTI9IjEwMCUiPgogICAgPHN0b3Agb2Zmc2V0PSIwJSIgc3RvcC1jb2xvcj0iIzA3Nzk5NyIgc3RvcC1vcGFjaXR5PSIxIi8+CiAgICA8c3RvcCBvZmZzZXQ9IjEwMCUiIHN0b3AtY29sb3I9IiMwMjQzNjMiIHN0b3Atb3BhY2l0eT0iMSIvPgogIDwvbGluZWFyR3JhZGllbnQ+CiAgPHJlY3QgeD0iMCIgeT0iMCIgd2lkdGg9IjEiIGhlaWdodD0iMSIgZmlsbD0idXJsKCNncmFkLXVjZ2ctZ2VuZXJhdGVkKSIgLz4KPC9zdmc+);
+    background: -moz-linear-gradient(top, rgba(7,121,151,1) 0%, rgba(2,67,99,1) 100%);
+    background: -webkit-gradient(linear, left top, left bottom, color-stop(0%,rgba(7,121,151,1)), color-stop(100%,rgba(2,67,99,1)));
+    background: -webkit-linear-gradient(top, rgba(7,121,151,1) 0%,rgba(2,67,99,1) 100%);
+    background: -o-linear-gradient(top, rgba(7,121,151,1) 0%,rgba(2,67,99,1) 100%);
+    background: -ms-linear-gradient(top, rgba(7,121,151,1) 0%,rgba(2,67,99,1) 100%);
+    background: linear-gradient(to bottom, rgba(7,121,151,1) 0%,rgba(2,67,99,1) 100%);
+    filter: progid:DXImageTransform.Microsoft.gradient( startColorstr='#077997', endColorstr='#024363',GradientType=0 );
+}
+.radial-glow {
+    /* fallback */
+    background-color: #227990;
+    background-position: center center;
+    background-repeat: no-repeat;
+
+    /* Safari 4-5, Chrome 1-9 */
+    /* Can't specify a percentage size? Laaaaaame. */
+    background: -webkit-gradient(radial, center center, 0, center center, 300, from(#5bb3c2), to(#227990));
+
+    /* Safari 5.1+, Chrome 10+ */
+    background: -webkit-radial-gradient(circle contain, #5bb3c2, #227990);
+
+    /* Firefox 3.6+ */
+    background: -moz-radial-gradient(circle contain, #5bb3c2, #227990);
+
+    /* IE 10 */
+    background: -ms-radial-gradient(circle contain, #5bb3c2, #227990);
+
+    /* Opera cannot do radial gradients yet */
+}

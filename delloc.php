@@ -15,12 +15,22 @@
 
     $eid            =   mysql_real_escape_string($eid);
     $result         =   mysql_query("SELECT `name` FROM `department_location` WHERE id='$eid'", $link) or die(mysql_error($link));
-    list($locname)  =   mysql_fetch_row($result);
-    mysql_free_result($result);
+    $locname        =   null;
+
+    if ($result)
+    {
+        list($locname)  =   mysql_fetch_row($result);
+        mysql_free_result($result);
+    }
     $do     =   mysql_query("delete from department_location where id = '$eid'",$link);
     if(mysql_affected_rows($link)) {
         setSession('location_deleted',1);
-        setSession('deleted_location', stripslashes($locname));
+        if ($locname)
+        {
+            setSession('deleted_location', stripslashes($locname));
+        }
+        //Update user access
+        updateUserAccess();
     }
     header('location: editdept.php?id='.$depid.'&sid='.$sid.'&tab=tabdept#tabdept');
     exit();

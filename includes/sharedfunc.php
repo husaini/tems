@@ -401,3 +401,12 @@ function recursive_array_search($needle,$haystack) {
     return false;
 }
 }
+
+function updateUserAccess($uid=null)
+{
+    if(!$uid)
+    {
+        $uid    =   getSession('uid');
+    }
+    setSession('access', getUserAccessList($uid));
+}

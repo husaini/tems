@@ -75,8 +75,9 @@ switch ($output)
     break;
 }
 
+?>
 
-?><!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Strict//EN"
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Strict//EN"
   "http://www.w3.org/TR/xhtml1/DTD/xhtml1-strict.dtd">
 <html xmlns="http://www.w3.org/1999/xhtml" xml:lang="en" lang="en">
 <head>
@@ -139,8 +140,8 @@ function wocompleted() {
                 <tr>
                     <td>Work Category <span class="required">*</span></td>
                     <td>
-                        <input type="checkbox" name="woprv"<?php echo (checkworkscope($results['category'], 1)) ? ' checked="checked"' : ''; ?> class="chk-required">Preventive
-                        <input type="checkbox" name="wocrt"<?php echo (checkworkscope($results['category'], 2)) ? ' checked="checked"' : ''; ?> class="chk-required">Corrective
+                        <label><input type="checkbox" name="woprv"<?php echo (checkworkscope($results['category'], 1)) ? ' checked="checked"' : ''; ?> class="chk-required"> Preventive</label>
+                        <label><input type="checkbox" name="wocrt"<?php echo (checkworkscope($results['category'], 2)) ? ' checked="checked"' : ''; ?> class="chk-required"> Corrective</label>
                         <?php
                         /*
                         <?php if ($wsvld): ?>
@@ -173,6 +174,14 @@ function wocompleted() {
                         </select>
                     </td>
                 </tr>
+                <?php if($results['status'] == '2' && $results['completed']): ?>
+                    <tr>
+                        <td>Completed Date</td>
+                        <td>
+                            <?php echo date('Y/m/d', strtotime($results['completed']));?>
+                        </td>
+                    </tr>
+                <?php endif; ?>
                 <?php
                 /*
                 <tr>

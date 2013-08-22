@@ -1,6 +1,7 @@
 <?php
     require(dirname(__FILE__).'/includes/checklogged.php');
     require(dirname(__FILE__).'/includes/cons.php');
+    require(dirname(__FILE__).'/includes/sharedfunc.php');
 
     $eid    =   (isset($_GET['id'])) ? $_GET["id"] : null;
     $sid    =   (isset($_GET['sid'])) ? $_GET["sid"] : null;

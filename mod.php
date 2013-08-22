@@ -847,6 +847,12 @@ switch($func) {
                     // Update user access
 
                     // Sites
+                    if ($sites || $departments || $locations)
+                    {
+                        //clear current
+                        deleteUserAccess($uid);
+                    }
+
                     foreach ($sites as $site_id)
                     {
                         addUserAccess('site',$site_id, $uid);

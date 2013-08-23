@@ -6,7 +6,7 @@
 
     $uid    =   isset($_GET['id'])? $_GET['id'] : $_SESSION['uid'];
 
-    if (!$uid || !is_numeric($uid)) {
+    if (!is_numeric($uid)) {
         die();
     }
     $uid    =   intval($uid, 10);
@@ -203,7 +203,8 @@
                 </table>
             </form>
 
-            <h3>Delete User</h3>
+            <?php if ($user->id > 0): ?>
+                <h3>Delete User</h3>
                 <p>Please exercise discretion before you proceed to use this function. Data deletion is irreversible.</p>
                 <p>All related data for this user will be deleted as well.</p>
                 <form action="mod.php" method="post">
@@ -212,6 +213,8 @@
                     <input type="hidden" name="id" value="<?php echo $user->id; ?>">
                     <input type="submit" value="Delete User" class="btn btn-danger" onclick="return confirm('Are you sure you want to delete this user?');">
                 </form>
+            <?php endif; ?>
+
         <?php endif;?>
     </div>
     <?php

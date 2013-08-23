@@ -1,6 +1,7 @@
 <?php
 /** Include PHPExcel_IOFactory */
 require_once (dirname(__FILE__).'/../lib/phpexcel/Classes/PHPExcel/IOFactory.php');
+require_once(dirname(__FILE__).'/sharedfunc.php');
 
 // Limit column to read for excel files
 class MyReadFilter implements PHPExcel_Reader_IReadFilter
@@ -65,7 +66,7 @@ class chunkReadFilter implements PHPExcel_Reader_IReadFilter
 
 if(!isset($mysqli))
 {
-    require_once(dirname(__FILE__).'/../includes/conn.php');
+    require_once(dirname(__FILE__).'/conn.php');
 }
 
 //$upload_dir =   dirname(__FILE__).'/upload/';
@@ -288,14 +289,14 @@ function csv_add_location($loc, $dep_id)
 {
     global $mysqli;
 
-    if(!is_string($loc) || !$loc || !is_numeric($site_id) || !$site_id)
+    if(!is_string($loc) || !$loc || !is_numeric($dep_id) || !$dep_id)
     {
         return;
     }
 
     $loc        =   mysqli_real_escape_string($mysqli, $loc);
-    $site_id    =   mysqli_real_escape_string($mysqli, $site_id);
-    $sql        =   "SELECT `id` FROM `site_location` WHERE TRIM(LOWER(`name`)) = TRIM(LOWER('$loc')) AND `depid`='$dep_id'";
+    $dep_id    =   mysqli_real_escape_string($mysqli, $dep_id);
+    $sql        =   "SELECT `id` FROM `department_location` WHERE TRIM(LOWER(`name`)) = TRIM(LOWER('$loc')) AND `depid`='$dep_id'";
     $result     =   $mysqli->query($sql) or die(mysqli_error($mysqli));
     $loc_id     =   null;
 
@@ -308,7 +309,7 @@ function csv_add_location($loc, $dep_id)
     if(!$loc_id)
     {
         // New location
-        $sql    =   'INSERT INTO `site_location`(`name`, `depid`) VALUES(?,?)';
+        $sql    =   'INSERT INTO `department_location`(`name`, `depid`) VALUES(?,?)';
         $stmt   =   $mysqli->prepare($sql);
         $stmt->bind_param('si', $loc, $dep_id);
 
@@ -443,49 +444,7 @@ function csv_add_user_department($dept_id)
     {
         return;
     }
-
-    // Get current locations
-    $sql    =   'SELECT `departments` FROM `user_access` WHERE uid = '.mysqli_real_escape_string($mysqli, $uid);
-    $result =   $mysqli->query($sql); // or die(mysqli_error($mysqli));
-    $departments  =   array();
-
-    if($result)
-    {
-        list($udepts)   =   $result->fetch_row();
-        mysqli_free_result($result);
-
-        $departments  =   unserialize($udepts);
-        if(!is_array($departments))
-        {
-            $departments  =   array();
-        }
-    }
-
-    if(in_array($dept_id, $departments))
-    {
-        //update session value
-        setSession('access', getUserAccessList($uid));
-        return;
-    }
-
-    //add this site id to the list
-    if(!is_array($dept_id))
-    {
-        $dept_id    =   array($dept_id);
-    }
-    $departments  =   serialize(array_merge($departments, $dept_id));
-    $sql    =   'INSERT INTO `user_access`('.
-                    '`uid`,'.
-                    '`departments`)'.
-                'VALUES(?,?) '.
-                'ON DUPLICATE KEY UPDATE '.
-                    '`departments` = ? ';
-
-    $stmt           =   $mysqli->prepare($sql) or die(mysqli_error($mysqli));
-    $stmt->bind_param('iss', $uid, $departments, $departments);
-    $stmt->execute();
-    //update session value
-    setSession('access', getUserAccessList($uid));
+    addUserAccess('department', $dept_id, $uid);
 }
 
 function csv_add_user_location($loc_id)
@@ -498,48 +457,7 @@ function csv_add_user_location($loc_id)
         return;
     }
 
-    // Get current locations
-    $sql    =   'SELECT `locations` FROM `user_access` WHERE uid = '.mysqli_real_escape_string($mysqli, $uid);
-    $result =   $mysqli->query($sql); // or die(mysqli_error($mysqli));
-    $locations  =   array();
-
-    if($result)
-    {
-        list($ulocs)   =   $result->fetch_row();
-        mysqli_free_result($result);
-
-        $locations  =   unserialize($ulocs);
-        if(!is_array($locations))
-        {
-            $locations  =   array();
-        }
-    }
-
-    if(in_array($loc_id, $locations))
-    {
-        //update session value
-        setSession('access', getUserAccessList($uid));
-        return;
-    }
-
-    //add this site id to the list
-    if(!is_array($loc_id))
-    {
-        $loc_id    =   array($loc_id);
-    }
-    $locations  =   serialize(array_merge($locations, $loc_id));
-    $sql    =   'INSERT INTO `user_access`('.
-                    '`uid`,'.
-                    '`locations`) '.
-                'VALUES(?,?) '.
-                'ON DUPLICATE KEY UPDATE '.
-                    '`locations` = ? ';
-
-    $stmt           =   $mysqli->prepare($sql);
-    $stmt->bind_param('iss', $uid, $locations, $locations);
-    $stmt->execute();
-    //update session value
-    setSession('access', getUserAccessList($uid));
+    addUserAccess('location', $loc_id, $uid);
 }
 
 function csv_add_user_site($site_id)
@@ -551,49 +469,7 @@ function csv_add_user_site($site_id)
     {
         return;
     }
-
-    // Get current sites
-    $sql    =   'SELECT `sites` FROM `user_access` WHERE uid = '.mysqli_real_escape_string($mysqli, $uid);
-    $result =   $mysqli->query($sql); // or die(mysqli_error($mysqli));
-    $sites  =   array();
-
-    if($result)
-    {
-        list($usites)   =   $result->fetch_row();
-        mysqli_free_result($result);
-
-        $sites  =   unserialize($usites);
-        if(!is_array($sites))
-        {
-            $sites  =   array();
-        }
-    }
-
-    if(in_array($site_id, $sites))
-    {
-        //update session value
-        setSession('access', getUserAccessList($uid));
-        return;
-    }
-
-    //add this site id to the list
-    if(!is_array($site_id))
-    {
-        $site_id    =   array($site_id);
-    }
-    $sites  =   serialize(array_merge($sites, $site_id));
-    $sql    =   'INSERT INTO `user_access`('.
-                    '`uid`,'.
-                    '`sites`) '.
-                'VALUES(?,?) '.
-                'ON DUPLICATE KEY UPDATE '.
-                    '`sites` = ? ';
-
-    $stmt           =   $mysqli->prepare($sql) or die(mysqli_error($mysqli).' | UID:  '.$uid.' | '.$sites);
-    $stmt->bind_param('iss', $uid, $sites, $sites);
-    $stmt->execute();
-    //update session value
-    setSession('access', getUserAccessList($uid));
+    addUserAccess('site', $site_id, $uid);
 }
 
 function csv_clean_value($str)

@@ -727,6 +727,13 @@ switch($func) {
                 $redirect_url   =   'user.php';
                 $id             =   (isset($_POST['id']) && is_numeric($_POST['id'])) ? intval($_POST['id'], 10) : null;
 
+                //DO NOT ALLOW default admin user to be deleted!
+                if ($id == 0)
+                {
+                    header("Location: $redirect_url");
+                    exit();
+                }
+
                 if(!$id) {
                     setSession('error', 'No user to delete.');
                     header("Location: $redirect_url");
@@ -826,7 +833,7 @@ switch($func) {
                     }
                 }
 
-                if ($uid) {
+                if ($uid !== null) {
                     // UPDATE
                     $sql    =   'UPDATE '.
                                     '`user` '.
@@ -961,7 +968,7 @@ switch($func) {
                     } else {
                         $sMsg = "<h3>Error:</h3>\n";
                         if (!withinbound($uname, 6, 50)) $sMsg .= "Username length must be between 6-15<br>\n";
-                        $autoredirect = false;
+                        $autoredirect = true;
                     }
                 }
             } else {
@@ -991,114 +998,4 @@ function cleanfilename($filename) {
     $reserved = preg_quote('\/:*?"<>|', '/'); //characters that are  illegal on any of the 3 major OS's
     //replaces all characters up through space and all past ~ along with the above reserved characters
     return @preg_replace("/([\\x00-\\x20\\x7f-\\xff{$reserved}])/e", "_", $filename);
-}
-
-function addUserAccess($type,$id,$uid=null)
-{
-    global $mysqli;
-    $current_user   =   false;
-
-    if(!$uid)
-    {
-        $uid    =   getSession('uid');
-        $current_user   =   true;
-    }
-
-    if(!$uid || !$id || !is_numeric($id))
-    {
-        return;
-    }
-
-    $uid    =   intval($uid, 10);
-    $id     =   intval($id, 10);
-
-    switch ($type)
-    {
-        case 'site':
-            $table  =   'user_site';
-            $col    =   'siteid';
-            $clause =   "AND siteid = $id ";
-            break;
-
-        case 'department':
-            $table  =   'user_department';
-            $col    =   'depid';
-            $clause =   "AND depid = $id ";
-            break;
-
-        case 'location':
-            $table  =   'user_location';
-            $col    =   'locid';
-            $clause =   "AND locid = $id ";
-            break;
-        default:
-            $table = null;
-            $clause =   '';
-            $col    =   null;
-    }
-
-    if ($table)
-    {
-        //get current access
-        $uaccess    =   getSession('access');
-        $cur_data   =   array();
-
-        if (isset($uaccess[$col]))
-        {
-            $cur_data   =   $uaccess[$col];
-        }
-
-        $cur_data[] =   $id;
-
-        //check if user has access set
-        $stmt =   $mysqli->query("SELECT COUNT(1) FROM `$table` WHERE uid = $uid $clause") or die(mysqli_error($mysqli));
-        list($count)    =   $stmt->fetch_row();
-        if ($count)
-        {
-            $sql    =   "UPDATE `$table` SET `$col` = ? WHERE uid = ?";
-
-        }
-        else
-        {
-            //new
-            $sql    =   "INSERT INTO `$table`(`$col`,uid) VALUES(?,?)";
-        }
-        $stmt   =   $mysqli->prepare($sql) or die(mysqli_error($mysqli).$sql);
-        $stmt->bind_param('si',$id, $uid);
-
-        if(!$stmt->execute())
-        {
-            $errormsg = $mysqli->error;
-            echo "Error in user access data insert: " . $errormsg;
-            exit;
-        }
-
-        //update user session if uid is current user
-        if ($current_user)
-        {
-            setSession('access', getUserAccessList($uid));
-        }
-    }
-}
-
-function deleteUserAccess($uid)
-{
-    global $mysqli;
-
-    $stmt    =   $mysqli->prepare('DELETE FROM user_site WHERE uid=?');
-    $stmt->bind_param('i', $uid);
-
-    $stmt->execute();
-
-    $stmt    =   $mysqli->prepare('DELETE FROM user_department WHERE uid=?');
-    $stmt->bind_param('i', $uid);
-
-    $stmt->execute();
-
-    $stmt    =   $mysqli->prepare('DELETE FROM user_location WHERE uid=?');
-    $stmt->bind_param('i', $uid);
-
-    $stmt->execute();
-
-
 }

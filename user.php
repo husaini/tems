@@ -170,8 +170,11 @@ if($result){
                                     <?php echo date('l, jS F, Y', strtotime($admin['lastaccess']));?> at <?php echo date('g:i A', strtotime($admin['lastaccess']));?>
                                 </td>
                                 <td nowrap="nowrap" class="center action">
-                                    <a href="edituser.php?id=<?php echo $admin['id'];?>">Edit</a> |
-                                    <a href="#" name="<?php echo $admin['name'];?>" id="user_<?php echo $admin['id'];?>" class="del-user">Delete</a>
+                                    <a href="edituser.php?id=<?php echo $admin['id'];?>">Edit</a>
+                                    <?php if ($admin['id'] != 0): ?>
+                                        |
+                                        <a href="#" name="<?php echo $admin['name'];?>" id="user_<?php echo $admin['id'];?>" class="del-user">Delete</a>
+                                    <?php endif;?>
                                 </td>
                             </tr>
                         <?php endforeach; ?>
@@ -257,8 +260,11 @@ if($result){
                                     <?php echo date('l, jS F, Y', strtotime($u['lastaccess']));?> at <?php echo date('g:i A', strtotime($u['lastaccess']));?>
                                 </td>
                                 <td nowrap="nowrap" class="center action">
-                                    <a href="edituser.php?id=<?php echo $u['id'];?>">Edit</a> |
-                                    <a href="#" name="<?php echo $u['name'];?>" id="user_<?php echo $u['id'];?>" class="del-user">Delete</a>
+                                    <a href="edituser.php?id=<?php echo $u['id'];?>">Edit</a>
+                                    <?php if($u['id'] != 0): ?>
+                                        |
+                                        <a href="#" name="<?php echo $u['name'];?>" id="user_<?php echo $u['id'];?>" class="del-user">Delete</a>
+                                    <?php endif;?>
                                 </td>
                             </tr>
                         <?php endforeach; ?>
@@ -665,12 +671,14 @@ if($result){
                 var form    =   document.createElement('form');
                 form.action =   'deluser.php';
                 form.method =   'post';
+                form.name   =   'frmUser';
                 var input   =   document.createElement('input');
                 input.type  =   'hidden';
                 input.name  =   'id';
                 input.value =   userID;
                 form.appendChild(input);
-                return form.submit();
+                document.body.appendChild(form);
+                frmUser.submit();
             }
             return false;
         });

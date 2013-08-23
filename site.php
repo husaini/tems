@@ -83,8 +83,9 @@ function confdel(obj, sid) {
                         <tr>
                             <th>Site Name</th>
                             <th>Address</th>
-                            <th>Phone No</th><th>Fax No</th>
-                            <th>&nbsp;</th>
+                            <th>Phone No</th>
+                            <th>Fax No</th>
+                            <th>Action</th>
                         </tr>
                     </thead>
                     <tbody>
@@ -129,13 +130,13 @@ function confdel(obj, sid) {
                                         <td><?php echo $results['address'];?></td>
                                         <td><?php echo $results['phone'];?></td>
                                         <td><?php echo $results['fax'];?></td>
-                                        <td><a href="delsite.php?id=<?php echo $results['id'];?>">Delete</a></td>
+                                        <td class="center"><a href="delsite.php?id=<?php echo $results['id'];?>">Delete</a></td>
                                     </tr>
                                 <?php endwhile; ?>
 
                             <?php else: ?>
                                 <tr>
-                                    <td align="center" colspan="4">No sites found.</td>
+                                    <td align="center" colspan="5">No sites found.</td>
                                 </tr>
                             <?php endif; ?>
                     </tbody>

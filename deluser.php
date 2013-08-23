@@ -13,6 +13,12 @@
 
     $id     =   (isset($_POST['id']) && is_numeric($_POST['id'])) ? intval($_POST['id'], 10) : null;
 
+    if ($id == 0)
+    {
+        header("Location: $redirect_url");
+        exit();
+    }
+
     if(!$id) {
         setSession('error', 'No user to delete.');
         header("Location: $redirect_url");

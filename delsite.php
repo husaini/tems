@@ -3,32 +3,38 @@
     require(dirname(__FILE__).'/includes/cons.php');
     require(dirname(__FILE__).'/includes/sharedfunc.php');
 
-    $eid = (isset($_GET['id'])) ? $_GET["id"] : null;
+    $site_id    =   (isset($_POST['id']) && is_numeric($_POST['id'])) ? intval($_POST['id'], 10) : null;
 
-    if(!$eid) {
+    if(!$site_id)
+    {
         header('location: site.php');
         exit();
     }
 
-    $eid            =   mysql_real_escape_string($eid);
-    $result         =   mysql_query("SELECT `name` FROM `site` WHERE id='$eid'", $link);
+    $result         =   mysql_query("SELECT `name` FROM `site` WHERE id='$site_id'", $link);
     $item_name      =   null;
+
     if ($result)
     {
         list($item_name)  =   mysql_fetch_row($result);
         mysql_free_result($result);
     }
-    $do     =   mysql_query("delete from site where id = '$eid'");
+
+    if(!$item_name)
+    {
+        //probably was deleted somewhere
+        header('location: site.php');
+        exit();
+    }
+
+    $do     =   mysql_query("delete from site where id = '$site_id'");
 
     if(mysql_affected_rows($link)) {
-        setSession('site_deleted',1);
-        if($item_name)
-        {
-            setSession('deleted_site', stripslashes($item_name));
-        }
-        //Update user access
+        setSession('site_deleted', "Site <em>\"$item_name\"</em> was successfully deleted.");
+        setSession('deleted_site', stripslashes($item_name));
+
+        //Update user access session
         updateUserAccess();
     }
     header('location: site.php');
     exit();
-?>

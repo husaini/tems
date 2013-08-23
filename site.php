@@ -57,6 +57,32 @@ $(document).ready(function(){
         });
     }
     $('#tabs').tabs({active: activeTabIndex});
+    if($('.alert-success').length > 0) {
+        setTimeout(function() {
+            $('.alert-success').fadeOut('slow');
+        }, 1500);
+    }
+    $('.del-link').click(function(e) {
+        e.preventDefault();
+        var id = $(this).data('id') || null;
+        if(id) {
+            var message = 'You are about to delete this item and all its related data. Are you sure you want to do this?';
+            if(confirm(message)) {
+                var form = document.createElement('form');
+                form.name = 'frmDeleteSite';
+                form.method='post';
+                form.action = 'delsite.php?id='+id;
+                var i = document.createElement('input');
+                i.name = 'id';
+                i.value = id;
+                i.type='hidden';
+                form.appendChild(i);
+                document.body.appendChild(form);
+                frmDeleteSite.submit();
+            }
+        }
+        return false;
+    });
 });
 
 function confdel(obj, sid) {
@@ -76,6 +102,13 @@ function confdel(obj, sid) {
                 <li><a href="#tablist">List</a></li>
                 <li><a href="#tabnew">New</a></li>
             </ul>
+            <div class="clear">&nbsp;</div>
+            <?php if(getSession('site_added', true)): ?>
+                <p class="alert alert-success">Site was successfully added.</p>
+            <?php endif; ?>
+            <?php if(getSession('site_deleted')): ?>
+                <p class="alert alert-success"><?php echo getSession('site_deleted', true);?></p>
+            <?php endif; ?>
             <div id="tablist">
                 <h3>Site List</h3>
                 <table class="tlist full-width">
@@ -130,7 +163,7 @@ function confdel(obj, sid) {
                                         <td><?php echo $results['address'];?></td>
                                         <td><?php echo $results['phone'];?></td>
                                         <td><?php echo $results['fax'];?></td>
-                                        <td class="center"><a href="delsite.php?id=<?php echo $results['id'];?>">Delete</a></td>
+                                        <td class="center"><a data-id="<?php echo $results['id'];?>" href="delsite.php?id=<?php echo $results['id'];?>" class="del-link">Delete</a></td>
                                     </tr>
                                 <?php endwhile; ?>
 
@@ -146,7 +179,7 @@ function confdel(obj, sid) {
             <?php if (!isguest()): ?>
                 <div id="tabnew">
                     <h3>Add New Site</h3>
-                    <form method="post" action="mod.php" onsubmit="return verifyform()">
+                    <form method="post" action="mod.php">
                         <input type="hidden" name="func" value="add_site" />
                         <table class="full-width no-border">
                             <tr>

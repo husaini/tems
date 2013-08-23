@@ -49,6 +49,16 @@ table.display thead th {
     clear: both;
 }
 
+.DataTables_sort_wrapper {
+    display:inline;
+    width:auto;
+}
+
+.DataTables_sort_icon {
+    display:block;
+    float: left;
+}
+
 .dataTables_processing {
     position: absolute;
     top: 0px;
@@ -135,6 +145,8 @@ table.display td {
 table.display td.center {
     text-align: center;
 }
+
+
 
 .hl {
 background-color: #FFEAA8 !important;

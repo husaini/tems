@@ -1,6 +1,7 @@
 <?php
     require(dirname(__FILE__).'/includes/checklogged.php');
     require(dirname(__FILE__).'/includes/cons.php');
+    require(dirname(__FILE__).'/includes/sharedfunc.php');
 
     $cat    =   (isset($_POST['cat'])) ? $_POST['cat'] : null;
     $man    =   (isset($_POST['man'])) ? $_POST['man'] : null;
@@ -17,6 +18,10 @@
         $man    =   mysql_real_escape_string($man);
         $mod    =   mysql_real_escape_string($mod);
         $q      =   mysql_query("insert into asset_model (name,manuid,typeid) values ('$mod','$man','$cat')");
+        if ($q)
+        {
+            setSession('asset_item_added', 'Model <em>"'.$mod.'"/em> was successfully added.');
+        }
         header('location: library.php#mod');
         exit();
     }

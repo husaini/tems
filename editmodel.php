@@ -1,8 +1,10 @@
 <?php
     require(dirname(__FILE__).'/includes/checklogged.php');
     require(dirname(__FILE__).'/includes/cons.php');
+    require(dirname(__FILE__).'/includes/sharedfunc.php');
 
     $eid    =   (isset($_GET['eid'])) ? $_GET["eid"] : null;
+    $tab    =   isset($_GET['tab']) ? $_GET['tab'] : 'mod';
 
     if(!$eid) {
         header('location: library.php?tab=mod');
@@ -11,7 +13,7 @@
 
     if ($_POST) {
         foreach ($_POST as $key => $value) {
-            $_POST[$key] = mysql_real_escape_string($value);
+            $_POST[$key] = mysql_real_escape_string(trim($value));
         }
 
         $cat    =   (isset($_POST['cat'])) ? $_POST["cat"] : null;
@@ -20,10 +22,17 @@
         $man    =   (isset($_POST['man'])) ? $_POST["man"] : null;
         $mod    =   (isset($_POST['mod'])) ? $_POST["mod"] : null;
         $tap    =   (isset($_POST['tap'])) ? $_POST["tap"] : null;
+        $desc   =   isset($_POST['description']) ? $_POST['description'] : null;
 
-        if($tap && $cat && $did && $clas && $man && $mod) {
-            mysql_query("update asset_model set name = '$mod', manuid = '$man', typeid = '$cat' where id = '$did'");
-            header('location: library.php?tab=mod');
+        if($tap && $cat && $did && $man && $mod) {
+            mysql_query("update asset_model set name = '$mod', manuid = '$man', typeid = '$cat', description='$desc' where id = '$did'", $link) or die(mysql_error($link));
+            if(mysql_affected_rows($link))
+            {
+                setSession('asset_item_updated', 'Model was successfully updated.');
+            }
+
+            header('location: library.php?tab='.$tab);
+            exit();
         }
     }
 
@@ -45,11 +54,11 @@
 <link rel="stylesheet" href="css/jqueryui/jquery-ui-1.9.2.custom.css" type="text/css" media="screen">
 <link rel="stylesheet" href="css/table_jui.css" type="text/css" media="screen">
 <link rel="stylesheet" href="css/style.css" type="text/css" media="screen">
-<title>Welcome to T.E.M.S + EMS</title>
+<title>TEMS: Edit Model</title>
 </head>
 <body>
     <div id="body_content">
-        <form method="post" action="editmodel.php">
+        <form method="post">
             <h1 class="page-title full-width">Edit Model</h1>
             <p class="clear">&nbsp;</p>
             <p>

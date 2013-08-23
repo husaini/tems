@@ -1,6 +1,7 @@
 <?php
     require(dirname(__FILE__).'/includes/checklogged.php');
     require(dirname(__FILE__).'/includes/cons.php');
+    require(dirname(__FILE__).'/includes/sharedfunc.php');
 
     $tap    =   (isset($_POST['tap'])) ? $_POST["tap"] : null;
     $man    =   (isset($_POST['man'])) ? $_POST['man'] : null;
@@ -13,6 +14,10 @@
     if($tap){
         $man    =   mysql_real_escape_string($man);
         $result =   mysql_query("insert into asset_manufacturer (`name`) value ('$man')");
+        if($result)
+        {
+            setSession('asset_item_added', 'Manufacturer <em>"'.$man.'"/em> was successfully added.');
+        }
         header('location: library.php#man');
         exit();
     }

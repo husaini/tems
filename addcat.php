@@ -1,6 +1,7 @@
 <?php
     require(dirname(__FILE__).'/includes/checklogged.php');
     require(dirname(__FILE__).'/includes/cons.php');
+    require(dirname(__FILE__).'/includes/sharedfunc.php');
 
     $clas   =   (isset($_POST['clas'])) ? $_POST["clas"] : null;
     $tap    =   (isset($_POST['tap'])) ? $_POST["tap"] : null;
@@ -15,6 +16,10 @@
         $cat    =   mysql_real_escape_string($cat);
         $clas   =   mysql_real_escape_string($clas);
         $q      =   mysql_query("insert into asset_type (name,classid) values ('$cat','$clas')");
+        if ($q)
+        {
+            setSession('asset_item_added', 'Category <em>"'.$cat.'"/em> was successfully added.');
+        }
         header('location: library.php#editol');
         exit();
     }

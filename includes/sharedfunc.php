@@ -9,13 +9,13 @@ function addUserAccess($type,$id,$uid=null)
     }
     $current_user   =   false;
 
-    if(!$uid)
+    if($uid === null)
     {
-        $uid    =   getSession('uid');
+        $uid    =   getSession('uid') || null;
         $current_user   =   true;
     }
 
-    if(!$uid || !$id || !is_numeric($id))
+    if($uid === null || !$id || !is_numeric($id))
     {
         return;
     }
@@ -62,8 +62,9 @@ function addUserAccess($type,$id,$uid=null)
         $cur_data[] =   $id;
 
         //check if user has access set
-        $stmt =   $mysqli->query("SELECT COUNT(1) FROM `$table` WHERE uid = $uid $clause") or die(mysqli_error($mysqli));
-        list($count)    =   $stmt->fetch_row();
+        $result         =   $mysqli->query("SELECT COUNT(1) FROM `$table` WHERE uid = $uid $clause") or die(mysqli_error($mysqli));
+        list($count)    =   $result->fetch_row();
+        mysqli_free_result($result);
 
         if (!$count)
         {
@@ -85,8 +86,90 @@ function addUserAccess($type,$id,$uid=null)
                 setSession('access', getUserAccessList($uid));
             }
         }
+
+        //auto add item to admins
+        addAdminAccess($type,$id);
     }
 }
+
+function addAdminAccess($type,$id)
+{
+    global $mysqli;
+
+    if(!isset($mysqli) || !$mysqli)
+    {
+        require_once(dirname(__FILE__).'/conn.php');
+    }
+    $current_user   =   getSession('uid');
+
+    // Get all admins
+    $admins =   getAdmins();
+
+    if (!$admins)
+    {
+        return;
+    }
+    $id     =   intval($id, 10);
+
+    switch ($type)
+    {
+        case 'site':
+            $table  =   'user_site';
+            $col    =   'siteid';
+            $clause =   "AND siteid = $id ";
+            break;
+
+        case 'department':
+            $table  =   'user_department';
+            $col    =   'depid';
+            $clause =   "AND depid = $id ";
+            break;
+
+        case 'location':
+            $table  =   'user_location';
+            $col    =   'locid';
+            $clause =   "AND locid = $id ";
+            break;
+        default:
+            $table = null;
+            $clause =   '';
+            $col    =   null;
+    }
+
+    if ($table)
+    {
+        // Loop admins
+        foreach ($admins as $uid)
+        {
+            //add if not yet exist
+            $result         =   $mysqli->query("SELECT COUNT(1) FROM `$table` WHERE uid = $uid $clause") or die(mysqli_error($mysqli));
+            list($count)    =   $result->fetch_row();
+            mysqli_free_result($result);
+
+            if (!$count)
+            {
+                $sql    =   "INSERT INTO `$table`(`$col`,uid) VALUES(?,?)";
+
+                $stmt   =   $mysqli->prepare($sql) or die(mysqli_error($mysqli).$sql);
+                $stmt->bind_param('si',$id, $uid);
+
+                if(!$stmt->execute())
+                {
+                    $errormsg = $mysqli->error;
+                    echo "Error in user access data insert: " . $errormsg;
+                    exit;
+                }
+
+                //update user session if uid is current user
+                if ($current_user)
+                {
+                    setSession('access', getUserAccessList($uid));
+                }
+            }
+        }
+    }
+}
+
 
 function deleteUserAccess($uid)
 {
@@ -293,6 +376,24 @@ function getSession($key, $delete=false) {
 function setSession($key, $value) {
     if($key) {
         $_SESSION[$key] = $value;
+    }
+}
+
+function getAdmins()
+{
+    global $mysqli;
+
+    $result =   $mysqli->query('SELECT id FROM user WHERE authlevel <= 10');
+    if ($result)
+    {
+        $rows   =   array();
+
+        while ($row = $result->fetch_object())
+        {
+            $rows[] =   $row->id;
+        }
+        mysqli_free_result($result);
+        return $rows;
     }
 }
 

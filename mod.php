@@ -476,7 +476,7 @@ switch($func) {
                 exit;
             }
 
-            //Changes: 20130822 Husaii - Auto add location access to user
+            //Changes: 20130822 Husaini - Auto add location access to user
             $id  =   mysqli_insert_id($mysqli);
             addUserAccess('site', $id);
 

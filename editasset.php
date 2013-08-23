@@ -139,7 +139,6 @@ $doccat[4]      =   "Financial";
 
 <script type="text/javascript" src="js/jquery.min.js"></script>
 <script type="text/javascript" src="js/jquery-ui.min.js"></script>
-
 <script type="text/javascript" src="fancybox/jquery.fancybox.js"></script>
 <script type="text/javascript" src="js/jquery.validationengine.js"></script>
 <script type="text/javascript" src="js/jquery.validationengine-en.js"></script>
@@ -224,8 +223,9 @@ $doccat[4]      =   "Financial";
                 options += '<option value="' + j[i].optionValue + '">' + j[i].optionDisplay + '</option>';
             }
             $('#classid').html(options);
-            $('#classid option[value=<?php echo $results['classid']; ?>]').attr('selected', 'selected');
-
+            <?php if(isset($results['classid'])): ?>
+                $('#classid option[value=<?php echo $results['classid']; ?>]').attr('selected', 'selected');
+            <?php endif;?>
             $.getJSON("selectget.php",{id: $('#classid').val(), ie: 0, f: "typeclass"}, function(j) {
                 var options = '';
                 for (var i = 0; i < j.length; i++) {
@@ -451,6 +451,12 @@ $doccat[4]      =   "Financial";
             </ul>
             <div id="tabdetails">
                 <h3>Asset Details</h3>
+                <?php if(getSession('asset_updated', true)): ?>
+                    <p class="alert alert-success">Asset was successfully updated.</p>
+                <?php endif; ?>
+                <?php if(getSession('asset_added', true)): ?>
+                    <p class="alert alert-success">Asset was successfully added.</p>
+                <?php endif; ?>
                 <div class="clear">&nbsp;</div>
                 <form id="frmtabdetails" method="post" action="mod.php" onsubmit="return verifyform()">
                     <input type="hidden" name="func" value="edit_asset" />
@@ -479,24 +485,6 @@ $doccat[4]      =   "Financial";
                                 <label><input disabled="disabled" type="radio" name="under_contract" value="no" <?php echo ($results['under_contract'] == 'no' || !$results['under_contract']) ? 'checked="checked"':''?>> NO</label>
                             </td>
                         </tr>
-                        <?php
-                        /*
-                        <tr>
-                            <td>Category</td>
-                            <td>
-                                <select name="classid" id="classid" disabled></select>
-                                <select name="typeid" id="typeid" disabled></select>
-                            </td>
-                        </tr>
-                        <tr>
-                            <td>Brand/Model</td>
-                            <td>
-                                <select name="manuid" id="manuid" disabled></select>
-                                <select name="modelid" id="modelid" disabled></select>
-                            </td>
-                        </tr>
-                        */
-                        ?>
                         <tr>
                             <td>Model</td>
                             <td>
@@ -514,23 +502,6 @@ $doccat[4]      =   "Financial";
                                 <input required="required" type="text" name="serialno" size="30" maxlength="30" value="<?php $serialno = $results['serialno']; echo $serialno; ?>" disabled />
                             </td>
                         </tr>
-                        <?php
-                        /*
-                        <?php
-                            //$link = mysql_connect('localhost','root','');
-                            //$mydb = mysql_select_db('tems',$link);
-                            $mid    = $results['moteid'];
-                            $getm   = mysql_query("select name from mote where id ='$mid'");
-                            $getn   = mysql_fetch_array($getm);
-                        ?>
-                        <tr>
-                            <td>TEMS No</td>
-                            <td>
-                                <input type="text" name="aresno" size="30" maxlength="30" value="<?php echo $getn['name']; ?>" disabled />
-                            </td>
-                        </tr>
-                        */
-                        ?>
                         <tr>
                             <td>Reference No</td>
                             <td>
@@ -578,44 +549,6 @@ $doccat[4]      =   "Financial";
                                 <?php endif; ?>
                             </td>
                         </tr>
-                        <!-- -->
-                        <?php /*
-                        <tr>
-                            <td>Location <span class="required">*</span></td>
-                            <td>
-                            <?php if ($sid > 0 && $sid != 65535): ?>
-                                <input type="hidden" name="siteid" value="<?php echo $sid;?>" />
-                                <select required="required" name="locationid" disabled>
-                                    <?php
-                                        sqltoarray("select id, name from site_location where siteid = " . $sid . " order by name", $loc);
-                                        optionize($loc, $results['locationid']);
-                                    ?>
-                                </select>
-                            <?php else: ?>
-                                <select required="required" name="siteid" id="siteid" disabled>
-                                    <option></option>
-                                    <?php optionize($site, $results['siteid']); ?>
-                                </select>
-                                <select required="required" name="locationid" id="locationid" disabled></select>
-                            <?php endif; ?>
-                            </td>
-                        </tr>
-                        <tr>
-                            <td>Department</td>
-                            <td>
-                                <?php if ($sid > 0 && $sid != 65535): ?>
-                                    <select required="required" name="department_id" disabled>
-                                        <?php
-                                            sqltoarray("select id, name from site_department where siteid = " . $sid . " order by name", $dept);
-                                            optionize($dept, $results['department_id']);
-                                        ?>
-                                    </select>
-                                <?php else: ?>
-                                    <select name="department_id" id="department_id" disabled></select>
-                                <?php endif; ?>
-                            </td>
-                        </tr>
-                        */?>
                         <tr>
                             <td>Purchase Date</td>
                             <td>
@@ -782,191 +715,6 @@ $doccat[4]      =   "Financial";
                     </form>
                 <?php endif; ?>
             </div>
-
-            <?php
-            /*
-            <div id="tabares">
-            <?php
-                $getmote = mysql_query("select moteid from asset where id = '$id'");
-                $getrows = mysql_num_rows($getmote);
-                $getcols = mysql_fetch_array($getmote);
-
-                if($getcols['moteid'] <> ''): ?>
-                    <?php
-
-                    $loc = (isset($_POST['lock'])) ? $_POST["lock"] : null;
-
-                    if($loc == '1' && isset($_POST['id'])) {
-                        $did = $_POST["id"];
-                    } else {
-                        //$did = $_GET["id"];
-                        $did = $getcols['moteid'];
-                    }
-                    $date1  =   (isset($_POST["datepick1"])) ? $_POST["datepick1"] : null;
-                    $date2  =   (isset($_POST["datepick2"])) ? $_POST["datepick2"] : null;
-                    $piece1 =   $date1 ? explode("/",$date1) : null;
-                    $piece2 =   $date2 ? explode("/",$date2) : null;
-                    $day1   =   null;
-                    $day2   =   null;
-
-                    if ($day1 && $piece1) {
-                        $day1   =   $piece1[1];
-                        $mon1   =   $piece1[0];
-                        $yer1   =   $piece1[2];
-                        $tar1   =   "$day1/$mon1/$yer1";
-                    }
-
-                    if ($day2 && $piece2) {
-                        $day2   =   $piece2[1];
-                        $mon2   =   $piece2[0];
-                        $yer2   =   $piece2[2];
-                        $tar2   =   "$day2/$mon2/$yer2";
-                    }
-
-                    if($day1) {
-                        $man    =   "$did $tar1 $tar2 $day1 $mon1 $yer1 $day2 $mon2 $yer2 $maxx2 $maxx3";
-                        $min    =   "$did$tar1$tar2$day1$mon1$yer1$day2$mon2$yer2$maxx2$maxx3";
-                        $mote1  =   mysql_query("select * from mote where id = '$did'");
-                        $mote2  =   mysql_fetch_array($mote1);
-                        $read1  =   mysql_query("select * from reading where mote = '$did' and dates between ('$tar1') and ('$tar2')");
-                        $read2  =   mysql_num_rows($read1);
-                        $read4  =   mysql_query("select * from reading where mote = '$did' and dates between ('$tar1') and ('$tar2')");
-                        $read5  =   mysql_num_rows($read4);
-                        $read7  =   mysql_query("select * from reading where mote = '$did' and dates between ('$tar1') and ('$tar2')");
-                        $read8  =   mysql_num_rows($read7);
-                        $read9  =   mysql_query("select * from reading where mote = '$did' and dates between ('$tar1') and ('$tar2')");
-                        $read10 =   mysql_num_rows($read9);
-                    } else {
-                        $maxx1 = mysql_query("select * from reading where mote = '$did'");
-                        $maxx2 = mysql_num_rows($maxx1);
-                        if($maxx2 > 10) {
-                            $maxx3  = $maxx2 - 10;
-                            $mote1  = mysql_query("select * from mote where id = '$did'");
-                            $mote2  = mysql_fetch_array($mote1);
-                            $read1  = mysql_query("select * from reading where mote = '$did' limit $maxx3,10");
-                            $read2  = mysql_num_rows($read1);
-                            $read4  = mysql_query("select * from reading where mote = '$did' limit $maxx3,10");
-                            $read5  = mysql_num_rows($read4);
-                            $read7  = mysql_query("select * from reading where mote = '$did' limit $maxx3,10");
-                            $read8  = mysql_num_rows($read7);
-                            $read9  = mysql_query("select * from reading where mote = '$did' limit $maxx3,10");
-                            $read10 = mysql_num_rows($read9);
-                        } else {
-                            $mote1  = mysql_query("select * from mote where id = '$did'");
-                            $mote2  = mysql_fetch_array($mote1);
-                            $read1  = mysql_query("select * from reading where mote = '$did'");
-                            $read2  = mysql_num_rows($read1);
-                            $read4  = mysql_query("select * from reading where mote = '$did'");
-                            $read5  = mysql_num_rows($read4);
-                            $read7  = mysql_query("select * from reading where mote = '$did'");
-                            $read8  = mysql_num_rows($read7);
-                            $read9  = mysql_query("select * from reading where mote = '$did'");
-                            $read10 = mysql_num_rows($read9);
-                        }
-                    }
-
-                    $avg = 0;
-                    for($j=0;$j<$read10;$j++){
-                        $read11 =   mysql_fetch_array($read9);
-                        $avg    =   $avg + $read11['data2'];
-                    }
-                    $avg1 = $read10 ? $avg/$read10 : $avg;
-                    $avg2 = substr($avg1,0,4);
-                    ?>
-
-                    <table width="100%" border="0" cellspacing="0" cellpadding="5" bgcolor="#FFFFFF">
-                        <tr>
-                            <th>Temperature Graph for <?php echo $mote2['name'] ?> (10 latest readings)</th>
-                        </tr>
-                        <tr>
-                            <td>
-                                <?php if($day1): ?>
-                                    <!--img src="chart6.php?id=<?php //echo $did ?>&nin=7" /-->
-                                    <img src="chart6.php?id=<?php echo $did ?>&tag=1&dday1=<?php echo $day1 ?>&dmon1=<?php echo $mon1 ?>&dyer1=<?php echo $yer1 ?>&dday2=<?php echo $day2 ?>&dmon2=<?php echo $mon2 ?>&dyer2=<?php echo $yer2 ?>" />
-                                <?php else: ?>
-                                    <img src="chart6.php?id=<?php echo $did ?>" />
-                                <?php endif; ?>
-                            </td>
-                        </tr>
-                        <tr>
-                            <td bgcolor="#d5d5d5">Average Temperature Reading : <?php echo "$avg2" ?></td>
-                        </tr>
-                        <form method="post" action="chart.php" target="_self">
-                            <tr>
-                                <td bgcolor="#d5d5d5">
-                                    Generate new graph from
-                                    <input type="text" name="datepick1" id="datepicker" value="<?php echo $date1 ?>" /> to
-                                    <input type="text" name="datepick2" id="datepicker2" value="<?php echo $date2 ?>" />
-                                    <input type="submit" name="button1" id="button" value="Submit" />
-                                </td>
-                            </tr>
-                            <input type="hidden" name="id" value="<?php echo $did ?>" />
-                            <input type="hidden" name="lock" value="1" />
-                        </form>
-                        <?php if($day1): ?>
-                        <tr>
-                            <td bgcolor="#d5d5d5">Date selected between <?php echo $tar1 ?> and <?php echo $tar2 ?></td>
-                        </tr>
-                        <?php endif; ?>
-                    </table>
-                    &nbsp;
-
-                    <table width="100%" border="0" cellspacing="0" cellpadding="5" bgcolor="#FFFFFF">
-                        <tr>
-                            <th>Temperature</th>
-                            <th>Time</th>
-                            <th>Date</th>
-                            <th>Battery</th>
-                        </tr>
-                        <?php
-                            //ini_set("SMTP","smtp.example.com" );
-                            $z1 = 0;
-                            for($i=0;$i<$read5;$i++): ?>
-                                <?php
-                                $read6 = mysql_fetch_array($read4);
-                                if(($read6['data2'] > $mote2['temphi'])||($read6['data2'] < $mote2['templo'])) {
-                                    $z1 = $z1 + 1;
-                                } else {
-                                    $z1 = 0;
-                                }
-
-                                if($z1 == 3) {
-                                    $to         =   "farizshah@deltazgroup.com";
-                                    $from       =   "admin@jpmdtems.ppukm.ukm.my";
-                                    $subj       =   "critical problem with your devices";
-                                    $body       =   "latest temperature reading is bogus";
-                                    $headers    =   "MIME-Version: 1.0\r\n";
-                                    $headers    .=  "Content-type: text/html; charset=iso-8859-1\r\n";
-                                    $headers    =   "From: $from\r\n";
-                                    $headers    .=  "Content-type: text/html; charset=iso-8859-1 \n";
-                                    //ini_set('sendmail_from', 'me@domain.com');
-                                    //mail($to,$subj,$body,$headers);
-                                }
-
-                                if($i % 2) {
-                                    $bg = "bgcolor = #ffe2e4";
-                                } else {
-                                    $bg = "bgcolor = white";
-                                }
-                                ?>
-                                <tr>
-                                    <td <?php echo $bg ?>><?php echo $read6['data2'] ?></td>
-                                    <td <?php echo $bg ?>><?php echo $read6['times'] ?></td>
-                                    <td <?php echo $bg ?>><?php echo $read6['dates'] ?></td>
-                                    <td <?php echo $bg ?>><?php echo $read6['data1'] ?></td>
-                                </tr>
-                            <?php endfor; ?>
-                    </table>
-
-                <?php else: ?>
-
-                    No ARES unit installed for this asset
-
-                <?php endif; ?>
-
-            </div>
-            */
-            ?>
 
             <div id="tabdocs">
                 <h3>Documents & Attachments</h3>
@@ -1181,16 +929,7 @@ $doccat[4]      =   "Financial";
                                 <td>
                                     <input type="checkbox" name="woprv" class="chk-wo-cat">Preventive
                                     <input type="checkbox" name="wocrt" class="chk-wo-cat">Corrective
-                                    <?php
-                                    /*
-                                    <?php if ($wsvld): ?>
-                                        <input type="checkbox" name="wovld">Validation
-                                    <?php endif; ?>
-                                    <?php if ($wsclb): ?>
-                                        <input type="checkbox" name="woclb">Calibration
-                                    <?php endif; ?>
-                                    */
-                                    ?>
+
                                 </td>
                             </tr>
                             <tr>
@@ -1209,42 +948,7 @@ $doccat[4]      =   "Financial";
                                     </select>
                                 </td>
                             </tr>
-                            <?php
-                            /*
-                            <tr>
-                                <td>Vendor</td>
-                                <td>
-                                    <select name="vendorid" id="vendorid">
-                                        <?php optionize($vendor); ?>
-                                    </select>
-                                </td>
-                            </tr>
-                            <tr>
-                                <td>Date Required <span class="required">*</span></td>
-                                <td>
-                                    <input required="required" type="text" name="dtrequire" id="dtrequire" size="10" maxlength="15" value="" class="validate[required,custom[date]]" />
-                                </td>
-                            </tr>
-                            <tr>
-                                <td>Date Completed</td>
-                                <td>
-                                    <input type="text" name="dtcomplete" id="dtcomplete" size="10" maxlength="15" value="" class="validate[funcCall[wocompleted]]" />
-                                </td>
-                            </tr>
-                            <tr>
-                                <td>Order No</td>
-                                <td>
-                                    <input type="text" name="orderno" size="30" maxlength="20" value="" />
-                                </td>
-                            </tr>
-                            <tr>
-                                <td>Cost (RM)</td>
-                                <td>
-                                    <input type="text" name="wocost" size="30" maxlength="20" value="" />
-                                </td>
-                            </tr>
-                            */
-                            ?>
+
                             <tr>
                                 <td colspan="2" align="center">
                                     <input type="submit" value="Submit Data" class="btn btn-primary">

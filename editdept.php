@@ -28,7 +28,7 @@
                 mysql_free_result($q);
             }
             setSession('department_updated', 1);
-            header('location: editsite.php?id='.$sid.'&tab=tabdept');
+            header('location: editdept.php?id='.$did.'&sid='.$sid.'&tab=tabdept');
             exit();
         }
     }
@@ -74,14 +74,23 @@
 </head>
 <body>
     <div id="body_content">
-        <?php if(getSession('location_updated', true)): ?>
-            <p class="alert alert-success">Location was successfully updated.</p>
+        <?php if(getSession('department_updated', true)): ?>
+            <p class="alert alert-success">Department was successfully updated.</p>
+        <?php endif; ?>
+        <?php if(getSession('department_added', true)): ?>
+            <p class="alert alert-success">Department was successfully added.</p>
+        <?php endif; ?>
+        <?php if(getSession('department_deleted', true)): ?>
+            <p class="alert alert-success">Department <em>"<?php echo getSession('deleted_department', true);?>"</em> was successfully deleted.</p>
+        <?php endif; ?>
+         <?php if(getSession('location_updated', true)): ?>
+            <p class="alert alert-success">Department location was successfully updated.</p>
         <?php endif; ?>
         <?php if(getSession('location_added', true)): ?>
-            <p class="alert alert-success">Location was successfully added.</p>
+            <p class="alert alert-success">Department location was successfully added.</p>
         <?php endif; ?>
         <?php if(getSession('location_deleted', true)): ?>
-            <p class="alert alert-success">Location <em>"<?php echo getSession('deleted_location', true);?>"</em> was successfully deleted.</p>
+            <p class="alert alert-success">Department location <em>"<?php echo getSession('deleted_location', true);?>"</em> was successfully deleted.</p>
         <?php endif; ?>
         <form method="post">
             <h1 class="page-title full-width">Edit Department</h1>
@@ -159,7 +168,7 @@
                                         <?php echo $results['id'];?>
                                     </td>
                                     <td>
-                                        <a href="editloc.php?id=<?php echo $results['id'];?>&amp;depid=<?php echo $eid;?>&amp;sid=<?php echo $sid;?>&amp;tab=tabdept"><?php echo $results['name'];?></a>
+                                        <a href="editloc.php?id=<?php echo $results['id'];?>&amp;depid=<?php echo $eid;?>&amp;sid=<?php echo $sid;?>&amp;mod=editdept&&amp;tab=tabdept"><?php echo $results['name'];?></a>
                                     </td>
                                     <td>
                                         <a href="delloc.php?id=<?php echo $results['id'];?>&amp;depid=<?php echo $eid;?>&amp;sid=<?php echo $sid;?>&amp;tab=tabdept">Delete</a>

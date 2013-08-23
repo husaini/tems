@@ -3,11 +3,11 @@
     require(dirname(__FILE__).'/includes/cons.php');
     require(dirname(__FILE__).'/includes/sharedfunc.php');
 
-    $eid    =   (isset($_REQUEST['eid'])) ? $_REQUEST["eid"] : null;
-    $tab    =   isset($_GET['tab']) ? $_GET['tab'] : 'mod';
+    $eid    =   (isset($_GET['eid'])) ? $_GET["eid"] : null;
+    $tab    =   isset($_GET['tab']) ? $_GET['tab'] : 'tabnew';
 
     if(!$eid) {
-        header('location: library.php?tab=man');
+        header('location: library.php?tab=tabnew');
         exit();
     }
 
@@ -17,15 +17,14 @@
         }
 
         $did    =   (isset($_POST['did'])) ? $_POST["did"] : null;
-        $man    =   (isset($_POST['man'])) ? $_POST["man"] : null;
+        $clas   =   (isset($_POST['clas'])) ? $_POST["clas"] : null;
         $tap    =   (isset($_POST['tap'])) ? $_POST["tap"] : null;
 
-
-        if($tap && $man && $did) {
-            $q = mysql_query("update asset_manufacturer set name = '$man' where id = '$did'", $link);
+        if($tap && $clas && $did) {
+            $q = mysql_query("update asset_class set name = '$clas' where id = '$did'", $link);
             if(mysql_affected_rows($link))
             {
-                setSession('asset_item_updated', 'Manufacturer was successfully updated.');
+                setSession('asset_item_updated', 'Class was successfully updated.');
             }
 
             header('location: library.php?tab='.$tab);
@@ -34,8 +33,9 @@
     }
 
     $eid    =   mysql_real_escape_string($eid);
-    $q      =   mysql_query("select * from asset_manufacturer where id = '$eid'");
+    $q      =   mysql_query("select * from asset_class where id = '$eid'");
     $d      =   mysql_fetch_array($q);
+
 ?>
 <!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
 <html xmlns="http://www.w3.org/1999/xhtml">
@@ -44,25 +44,33 @@
 <link rel="stylesheet" href="css/jqueryui/jquery-ui-1.9.2.custom.css" type="text/css" media="screen">
 <link rel="stylesheet" href="css/table_jui.css" type="text/css" media="screen">
 <link rel="stylesheet" href="css/style.css" type="text/css" media="screen">
-<title>TEMS: Edit Manufacturer</title>
+<title>TEMS: Edit Class</title>
 </head>
 <body>
     <div id="body_content">
         <form method="post">
-            <h1 class="page-title full-width">Edit Manufacturer</h1>
+            <h1 class="page-title full-width">Edit Class</h1>
             <p class="clear">&nbsp;</p>
             <p>
-                <label class="auto">Manufacturer Name</label>
-                <input required="required" type="text" name="man" value="<?php echo $d['name']; ?>" />
+                <label class="auto">Class Name</label>
+                <input required="required" type="text" name="clas" value="<?php echo $d['name']; ?>" />
             </p>
             <p>&nbsp;</p>
             <p>
                 <input type="submit" value="Update" class="btn btn-primary" />
-                <a href="library.php?tab=man" name="cancel" class="btn">Cancel</a>
+                <a href="library.php?tab=tabnew" name="cancel" class="btn">Cancel</a>
             </p>
             <input type="hidden" name="tap" value="1" />
             <input type="hidden" name="did" value="<?php echo $eid; ?>" />
+
         </form>
     </div>
+    <?php
+        if(!function_exists('google_analytics'))
+        {
+            require_once(dirname(__FILE__).'/sharedfunc.php');
+        }
+        google_analytics('uitm');
+    ?>
 </body>
 </html>

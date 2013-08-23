@@ -1,6 +1,7 @@
 <?php
     require(dirname(__FILE__).'/includes/checklogged.php');
     require(dirname(__FILE__).'/includes/cons.php');
+    require(dirname(__FILE__).'/includes/sharedfunc.php');
 
     $clas   =   (isset($_POST['clas'])) ? $_POST["clas"] : null;
     $tap    =   (isset($_POST['tap'])) ? $_POST["tap"] : null;
@@ -13,6 +14,10 @@
     if($tap){
         $clas   =   mysql_real_escape_string($clas);
         $q      =   mysql_query("insert into asset_class (`name`) value ('$clas')");
+        if ($q)
+        {
+            setSession('asset_item_added', 'Class <em>"'.$clas.'"/em> was successfully added.');
+        }
         header('location: library.php#tabnew');
         exit();
     }

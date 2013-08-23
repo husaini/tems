@@ -447,10 +447,10 @@
             }
         });
 
-        if($('.alert').length > 0) {
+        if($('.alert-success').length > 0) {
             setTimeout(function() {
-                $('.alert').fadeOut('slow');
-            }, 2000);
+                $('.alert-success').fadeOut('slow');
+            }, 1500);
         }
     });
     </script>

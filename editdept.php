@@ -68,6 +68,8 @@
 <link rel="stylesheet" href="css/jqueryui/jquery-ui-1.9.2.custom.css" type="text/css" media="screen">
 <link rel="stylesheet" href="css/table_jui.css" type="text/css" media="screen">
 <link rel="stylesheet" href="css/style.css" type="text/css" media="screen">
+<script type="text/javascript" src="js/jquery.min.js"></script>
+
 <title>TEMS: Edit Department</title>
 </head>
 <body>
@@ -173,5 +175,14 @@
             </tbody>
         </table>
     </div>
+    <script type="text/javascript">
+        $(function() {
+            if($('.alert-success').length > 0) {
+                setTimeout(function() {
+                    $('.alert-success').fadeOut('slow');
+                }, 1500);
+            }
+        });
+    </script>
 </body>
 </html>

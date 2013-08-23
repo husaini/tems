@@ -155,7 +155,7 @@ switch($f) {
     case "location":
         $sql    =   'SELECT '.
                         'dl.id,'.
-                        'dl.name AS location, '.
+                        'dl.name, '.
                         'sd.name AS department,'.
                         'sd.id AS department_id '.
                     'FROM '.
@@ -264,7 +264,7 @@ if ($result) {
             foreach ($rows as $row) {
                 if($row['department_id'] == $department_id) {
                     $l['options'][] =   array(
-                        'optionDisplay' =>  $row['location'],
+                        'optionDisplay' =>  $row['name'],
                         'optionValue'   =>  $row['id'],
                     );
                 }

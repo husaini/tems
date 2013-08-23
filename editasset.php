@@ -170,9 +170,13 @@ $doccat[4]      =   "Financial";
         $('#dtcomplete').datepicker({changeMonth:true,changeYear:true,dateFormat:'yy-mm-dd',yearRange:'1980:2020'});
         $('#unta').validationEngine();
         $('#tblassetwo tr').hover(function(){$(this).addClass("hl");},function(){$(this).removeClass("hl");});
-        $('#tblassetwo tr').click(function(){
-            $aid = parseInt($(this).children("td").first().text());
-            if (!isNaN($aid)) window.location = "editworkorder.php?a=1&id=" + $aid;
+        $('#tblassetwo tr').click(function(e){
+            e.preventDefault();
+            var woID = $(this).data('workorderId') || 0;
+            if(woID)
+            {
+                window.location = "editworkorder.php?id=" + woID;
+            }
         });
         $('#imglist a').fancybox({
             'titlePosition': 'inside',
@@ -392,6 +396,12 @@ $doccat[4]      =   "Financial";
                 return false;
             }
         });
+
+        if($('.alert-success').length > 0) {
+            setTimeout(function() {
+                $('.alert-success').fadeOut('slow');
+            }, 1500);
+        }
     });
 
     function wocompleted() {
@@ -1041,7 +1051,7 @@ $doccat[4]      =   "Financial";
                 <table id="tblassetwo" class="tlist">
                     <tr>
                         <th>WO ID</th>
-                        <th>Order No</th>
+                        <th>Date Created</th>
                         <th>Category</th>
                         <th>Vendor</th>
                         <th>Status</th>
@@ -1061,6 +1071,9 @@ $doccat[4]      =   "Financial";
                     $sql    =   'SELECT '.
                                     'workorder.id, '.
                                     'workorder.orderno, '.
+                                    'workorder.created AS workorder_date,'.
+                                    'asset.assetno AS tems_no,'.
+                                    'asset.siteid AS asset_site_id,'.
                                     'category, '.
                                     'vendor.name, '.
                                     'workorder.status, '.
@@ -1068,6 +1081,8 @@ $doccat[4]      =   "Financial";
                                     'workorder.completed '.
                                 'FROM '.
                                     'workorder '.
+                                'INNER JOIN '.
+                                    'asset on workorder.assetid = asset.id '.
                                 'LEFT JOIN '.
                                     'vendor ON workorder.vendorid = vendor.id '.
                                 'WHERE '.
@@ -1086,32 +1101,58 @@ $doccat[4]      =   "Financial";
                             $bindvars[] = &$results[$column->name];
                         }
                         call_user_func_array(array($stmt, 'bind_result'), $bindvars);
+                        ?>
+                        <tbody class="wo-list">
+                            <?php
+                                while ($stmt->fetch()): ?>
+                                    <?php
+                                        $site_id    =   $results['asset_site_id'];
+                                        if ($site_id < 10)
+                                        {
+                                            $site_id    =   '0'.$site_id;
+                                        }
+                                        // Concatenate strings for workorder id as in PDF format
+                                        // TEMS no
+                                        $wotems_no  =   array_pop(explode('-', $results['tems_no']));
+                                        $wotems_no  =   (String)$wotems_no;
+                                        // case when tems no not using correct format, it should be 5 chars as we we pad it on asset upload
+                                        if (strlen($wotems_no) < 5)
+                                        {
+                                            $wotems_no   =   str_pad($wotems_no,5,'0', STR_PAD_LEFT);
+                                        }
 
-                        while ($stmt->fetch()): ?>
-                            <tr>
-                                <td>
-                                    <a href="editworkorder.php?a=1&id=<?php echo $results['id']?> "><?php echo $results['id'];?></a>
-                                </td>
-                                <td><?php echo $results['orderno']; ?></td>
-                                <td><?php echo workscoping($results['category']); ?></td>
-                                <td><?php echo $results['name'];?></td>
-                                <td><?php echo $wostatus[$results['status']]; ?></td>
-                                <td><?php echo $results['required']; ?></td>
-                                <td><?php echo $results['completed']; ?></td>
-                            </tr>
-                        <?php endwhile; ?>
+                                        //Workorder year
+                                        $woyear     =   date('y', strtotime($results['workorder_date']));
 
+                                        //Workorder no.
+                                        $wonum      =   str_pad($results['id'],5,'0', STR_PAD_LEFT);
+                                        $woid       =   "$site_id$wotems_no-$woyear-BEM-$wonum";
+                                    ?>
+                                    <tr data-workorder-id="<?php echo $results['id']?>">
+                                        <td>
+                                            <a href="editworkorder.php?a=1&id=<?php echo $results['id']?> "><?php echo $woid;?></a>
+                                        </td>
+                                        <td><?php echo date('Y/m/d', strtotime($results['workorder_date']));?></td>
+                                        <td><?php echo workscoping($results['category']); ?></td>
+                                        <td><?php echo $results['name'];?></td>
+                                        <td><?php echo $wostatus[$results['status']]; ?></td>
+                                        <td><?php echo $results['required']; ?></td>
+                                        <td><?php echo $results['completed']; ?></td>
+                                    </tr>
+                                <?php endwhile; ?>
+                        </tbody>
                     <?php else: ?>
-
-                        <tr>
-                            <td>&nbsp;</td>
-                            <td></td>
-                            <td></td>
-                            <td></td>
-                            <td></td>
-                            <td></td>
-                            <td></td>
-                        </tr>
+                        <tbody>
+                            <tr>
+                                <td>&nbsp;</td>
+                                <td></td>
+                                <td></td>
+                                <td></td>
+                                <td></td>
+                                <td></td>
+                                <td></td>
+                            </tr>
+                        </tbody>
                     <?php endif; ?>
                 </table>
             </div>

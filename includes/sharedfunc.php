@@ -1,4 +1,119 @@
 <?php
+function addUserAccess($type,$id,$uid=null)
+{
+    global $mysqli;
+
+    if(!isset($mysqli) || !$mysqli)
+    {
+        require_once(dirname(__FILE__).'/conn.php');
+    }
+    $current_user   =   false;
+
+    if(!$uid)
+    {
+        $uid    =   getSession('uid');
+        $current_user   =   true;
+    }
+
+    if(!$uid || !$id || !is_numeric($id))
+    {
+        return;
+    }
+
+    $uid    =   intval($uid, 10);
+    $id     =   intval($id, 10);
+
+    switch ($type)
+    {
+        case 'site':
+            $table  =   'user_site';
+            $col    =   'siteid';
+            $clause =   "AND siteid = $id ";
+            break;
+
+        case 'department':
+            $table  =   'user_department';
+            $col    =   'depid';
+            $clause =   "AND depid = $id ";
+            break;
+
+        case 'location':
+            $table  =   'user_location';
+            $col    =   'locid';
+            $clause =   "AND locid = $id ";
+            break;
+        default:
+            $table = null;
+            $clause =   '';
+            $col    =   null;
+    }
+
+    if ($table)
+    {
+        //get current access
+        $uaccess    =   getSession('access');
+        $cur_data   =   array();
+
+        if (isset($uaccess[$col]))
+        {
+            $cur_data   =   $uaccess[$col];
+        }
+
+        $cur_data[] =   $id;
+
+        //check if user has access set
+        $stmt =   $mysqli->query("SELECT COUNT(1) FROM `$table` WHERE uid = $uid $clause") or die(mysqli_error($mysqli));
+        list($count)    =   $stmt->fetch_row();
+
+        if (!$count)
+        {
+            $sql    =   "INSERT INTO `$table`(`$col`,uid) VALUES(?,?)";
+
+            $stmt   =   $mysqli->prepare($sql) or die(mysqli_error($mysqli).$sql);
+            $stmt->bind_param('si',$id, $uid);
+
+            if(!$stmt->execute())
+            {
+                $errormsg = $mysqli->error;
+                echo "Error in user access data insert: " . $errormsg;
+                exit;
+            }
+
+            //update user session if uid is current user
+            if ($current_user)
+            {
+                setSession('access', getUserAccessList($uid));
+            }
+        }
+    }
+}
+
+function deleteUserAccess($uid)
+{
+    global $mysqli;
+
+    if(!isset($mysqli) || !$mysqli)
+    {
+        require_once(dirname(__FILE__).'/conn.php');
+    }
+
+    $stmt    =   $mysqli->prepare('DELETE FROM user_site WHERE uid=?');
+    $stmt->bind_param('i', $uid);
+
+    $stmt->execute();
+
+    $stmt    =   $mysqli->prepare('DELETE FROM user_department WHERE uid=?');
+    $stmt->bind_param('i', $uid);
+
+    $stmt->execute();
+
+    $stmt    =   $mysqli->prepare('DELETE FROM user_location WHERE uid=?');
+    $stmt->bind_param('i', $uid);
+
+    $stmt->execute();
+
+
+}
 function getBaseUrl()
 {
     /* First we need to get the protocol the website is using */

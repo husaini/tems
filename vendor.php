@@ -79,7 +79,11 @@ $(document).ready(function(){
                             <?php if (!isguest()): ?>
                                 <tr>
                                     <td>
-                                        <a href="editvendor.php?id=<?php echo $results['id'];?>"><?php echo $results['name'];?></a>
+                                        <?php if ($results['id'] != 0): ?>
+                                            <a href="editvendor.php?id=<?php echo $results['id'];?>"><?php echo $results['name'];?></a>
+                                        <?php else: ?>
+                                            <?php echo $results['name'];?>
+                                        <?php endif; ?>
                                     </td>
 
                             <?php else: ?>
@@ -198,4 +202,3 @@ $(document).ready(function(){
 <?php
 $stmt->close();
 $mysqli->close();
-?>

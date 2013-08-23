@@ -1,5 +1,5 @@
 <?php
-require(dirname(__FILE__).'/includes/checklogged.php');
+require_once(dirname(__FILE__).'/includes/checklogged.php');
 require_once(dirname(__FILE__).'/includes/conn.php');
 require_once(dirname(__FILE__).'/includes/sharedfunc.php');
 require_once(dirname(__FILE__).'/includes/csvfunc.php');

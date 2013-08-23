@@ -448,11 +448,17 @@ function confdel(obj, sid) {
                                         <tr>
                                             <td><?php echo $row['id']; ?></td>
                                             <td>
-                                                <b><a href="editclass.php?eid=<?php echo $row['id']; ?>"><?php echo $row['name']; ?></a></b>
+                                                <?php if ($row['id'] != 0): ?>
+                                                    <a href="editclass.php?eid=<?php echo $row['id']; ?>"><?php echo $row['name']; ?></a>
+                                                <?php else: ?>
+                                                    <?php echo $row['name']; ?>
+                                                <?php endif; ?>
                                             </td>
                                             <td>
-                                                <a href="editclass.php?eid=<?php echo $row['id']; ?>">Edit </a> |
-                                                <a data-tab="tabnew" data-type="1" data-id="<?php echo $row['id']?>" href="library.php?eid=<?php echo $row['id']; ?>&amp;del=1&amp;tab=tabnew" class="delete-item"> Delete</a>
+                                                <?php if ($row['id'] != 0): ?>
+                                                    <a href="editclass.php?eid=<?php echo $row['id']; ?>">Edit </a> |
+                                                    <a data-tab="tabnew" data-type="1" data-id="<?php echo $row['id']?>" href="library.php?eid=<?php echo $row['id']; ?>&amp;del=1&amp;tab=tabnew" class="delete-item"> Delete</a>
+                                                <?php endif;?>
                                             </td>
                                         </tr>
                                     <?php endwhile; ?>
@@ -492,11 +498,17 @@ function confdel(obj, sid) {
                                         <tr>
                                             <td><?php echo $row['id']; ?></td>
                                             <td>
-                                                <b><a href="editcat.php?eid=<?php echo $row['id']; ?>"><?php echo $row['name']; ?></a></b>
+                                                <?php if ($row['id'] != 0): ?>
+                                                    <a href="editcat.php?eid=<?php echo $row['id']; ?>"><?php echo $row['name']; ?></a>
+                                                <?php else: ?>
+                                                    <?php echo $row['name']; ?>
+                                                <?php endif;?>
                                             </td>
                                             <td>
-                                                <a href="editcat.php?eid=<?php echo $row['id']; ?>">Edit </a> |
-                                                <a data-tab="editol" data-type="2" data-id="<?php echo $row['id'];?>" href="library.php?eid=<?php echo $row['id']; ?>&amp;del=2&amp;tab=editol" class="delete-item"> Delete</a>
+                                                <?php if ($row['id'] != 0): ?>
+                                                    <a href="editcat.php?eid=<?php echo $row['id']; ?>">Edit </a> |
+                                                    <a data-tab="editol" data-type="2" data-id="<?php echo $row['id'];?>" href="library.php?eid=<?php echo $row['id']; ?>&amp;del=2&amp;tab=editol" class="delete-item"> Delete</a>
+                                                <?php endif; ?>
                                             </td>
                                         </tr>
                                     <?php endwhile; ?>
@@ -535,11 +547,17 @@ function confdel(obj, sid) {
                                         <tr>
                                             <td><?php echo $row['id']; ?></td>
                                             <td>
-                                                <b><a href="editman.php?eid=<?php echo $row['id'];?>"><?php echo $row['name'];?></a></b>
+                                                <?php if ($row['id'] != 0): ?>
+                                                    <a href="editman.php?eid=<?php echo $row['id'];?>"><?php echo $row['name'];?></a>
+                                                <?php else: ?>
+                                                    <?php echo $row['name'];?>
+                                                <?php endif?>
                                             </td>
                                             <td>
-                                                <a href="editman.php?eid=<?php echo $row['id'];?>">Edit </a> |
-                                                <a data-tab="man" data-type="3"  data-id="<?php echo $row['id'];?>" href="library.php?eid=<?php echo $row['id'] ?>&amp;del=3&amp;tab=man" class="delete-item"> Delete</a>
+                                                <?php if ($row['id'] != 0): ?>
+                                                    <a href="editman.php?eid=<?php echo $row['id'];?>">Edit </a> |
+                                                    <a data-tab="man" data-type="3"  data-id="<?php echo $row['id'];?>" href="library.php?eid=<?php echo $row['id'] ?>&amp;del=3&amp;tab=man" class="delete-item"> Delete</a>
+                                                <?php endif; ?>
                                             </td>
                                         </tr>
                                     <?php endwhile; ?>
@@ -579,11 +597,17 @@ function confdel(obj, sid) {
                                         <tr>
                                             <td><?php echo $row['id']; ?></td>
                                             <td>
-                                                <b><a href="editmodel.php?eid=<?php echo $row['id'];?>"><?php echo $row['name'];?></a></b>
+                                                <?php if ($row['id'] != 0): ?>
+                                                    <a href="editmodel.php?eid=<?php echo $row['id'];?>"><?php echo $row['name'];?></a>
+                                                <?php else: ?>
+                                                    <?php echo $row['name']; ?>
+                                                <?php endif; ?>
                                             </td>
                                             <td>
-                                                <a href="editmodel.php?eid=<?php echo $row['id'];?>">Edit </a> |
-                                                <a data-tab="mod" data-type="4" data-id="<?php echo $row['id'];?>" href="library.php?eid=<?php echo $row['id'];?>&amp;del=4&amp;tab=mod" class="delete-item"> Delete</a>
+                                                <?php if ($row['id'] != 0): ?>
+                                                    <a href="editmodel.php?eid=<?php echo $row['id'];?>">Edit </a> |
+                                                    <a data-tab="mod" data-type="4" data-id="<?php echo $row['id'];?>" href="library.php?eid=<?php echo $row['id'];?>&amp;del=4&amp;tab=mod" class="delete-item"> Delete</a>
+                                                <?php endif; ?>
                                             </td>
                                         </tr>
                                     <?php endwhile; ?>

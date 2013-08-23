@@ -131,6 +131,7 @@ $doccat[4]      =   "Financial";
 <head>
 <title>TEMS: Edit Asset</title>
 <link rel="stylesheet" href="css/jqueryui/jquery-ui-1.9.2.custom.css" type="text/css" media="screen">
+<link rel="stylesheet" href="datatables/css/demo_table_jui.css" type="text/css" media="screen">
 <link rel="stylesheet" href="css/table_jui.css" type="text/css" media="screen">
 <link rel="stylesheet" href="css/style.css" type="text/css" media="screen">
 <link rel="stylesheet" href="fancybox/jquery.fancybox.css" type="text/css" media="screen">
@@ -142,7 +143,8 @@ $doccat[4]      =   "Financial";
 <script type="text/javascript" src="fancybox/jquery.fancybox.js"></script>
 <script type="text/javascript" src="js/jquery.validationengine.js"></script>
 <script type="text/javascript" src="js/jquery.validationengine-en.js"></script>
-    <script type="text/javascript">
+<script type="text/javascript" src="datatables/jquery.datatables.js"></script>
+<script type="text/javascript">
     $(function() {
         $("#datepicker").datepicker();
         $("#datepicker2").datepicker();
@@ -178,6 +180,14 @@ $doccat[4]      =   "Financial";
                 window.location = "editworkorder.php?id=" + woID;
             }
         });
+        if ($('#tblassetwo tbody.wo-list').length > 0) {
+            var oTable = $('#tblassetwo').dataTable({
+                bJQueryUI: true,
+                iDisplayLength: 25,
+                sPaginationType: 'full_numbers'
+            });
+            oTable.fnSort( [[1,'desc'] ] );//sort by date created
+        }
         $('#imglist a').fancybox({
             'titlePosition': 'inside',
             'overlayColor': '#977',
@@ -1049,15 +1059,17 @@ $doccat[4]      =   "Financial";
             <div id="tabservice">
                 <h3>Work Order List</h3>
                 <table id="tblassetwo" class="tlist">
-                    <tr>
-                        <th>WO ID</th>
-                        <th>Date Created</th>
-                        <th>Category</th>
-                        <th>Vendor</th>
-                        <th>Status</th>
-                        <th>Required</th>
-                        <th>Completed</th>
-                    </tr>
+                    <thead>
+                        <tr>
+                            <th>WO ID</th>
+                            <th>Date Created</th>
+                            <th>Category</th>
+                            <th>Vendor</th>
+                            <th>Status</th>
+                            <th>Required</th>
+                            <th>Completed</th>
+                        </tr>
+                    </thead>
                     <?php
                     $wostatus[1] = "Scheduled";
                     $wostatus[2] = "Completed";

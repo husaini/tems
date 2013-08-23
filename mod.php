@@ -124,6 +124,23 @@ switch($func) {
                 exit;
             }
 
+            /* Changes: 20130823 Husaini
+             *
+             * If PPMDate start is a previous date, set last service date to PPMDate
+             */
+            if ($appmst)
+            {
+                $today      =   strtotime(date('Y-m-d', time()));
+                $ppmdate    =   strtotime($appmst);
+
+                if ($ppmdate < $today)
+                {
+                    $last_service   =   date('Y-m-d', $ppmdate);
+                    $stmt = $mysqli->prepare('UPDATE asset SET `lastsvc` = ? WHERE id = ?');
+                    $stmt->bind_param('si', $last_service,$aid);
+                }
+            }
+
             if(!empty($_POST['roomno'])) {
                 $room_no    =   $mysqli->real_escape_string($_POST['roomno']);
                 $asset_id   =   $mysqli->real_escape_string($aid);

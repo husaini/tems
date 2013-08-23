@@ -206,7 +206,7 @@ sqltoarray("select id, name from vendor where (type = 0 or type = 1) and status 
                                     'asset_model.name modelname, '.
                                     'serialno, '.
                                     'site.name sitename, '.
-                                    'site_location.name locname, '.
+                                    'department_location.name locname, '.
                                     'site_department.name department, '.
                                     'asset.lastsvc,'.
                                     "IF(IFNULL(asset.ppmstart, '') > IFNULL(asset.lastsvc, ''), asset.ppmstart, asset.lastsvc) + INTERVAL (12/asset.ppmfreq) MONTH nextsvc ".
@@ -224,12 +224,12 @@ sqltoarray("select id, name from vendor where (type = 0 or type = 1) and status 
                                 'LEFT JOIN '.
                                     'site ON asset.siteid = site.id '.
                                 'LEFT JOIN '.
-                                    'site_location ON asset.locationid = site_location.id '.
+                                    'department_location ON asset.locationid = department_location.id '.
+                                    'AND department_location.depid = asset.department_id '.
                                 'LEFT JOIN '.
                                     'site_department ON asset.department_id = site_department.id '.
                                 $sWhere;
 
-                    //echo $sQuery;
                     $stmt = $mysqli->prepare($sQuery) or die(mysqli_error($mysqli));
                     $stmt->execute();
                     $stmt->store_result();

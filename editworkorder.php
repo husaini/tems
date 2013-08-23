@@ -74,7 +74,16 @@ switch ($output)
         output_workorder_pdf($id);
     break;
 }
-
+$prev_url   =   'workorder.php';
+if(isset($_GET['mod']))
+{
+    switch ($_GET['mod'])
+    {
+        case 'editasset':
+            $prev_url   =   'editasset.php?id='.$results['assetid'].'&tab=tabservice#tabservice';
+            break;
+    }
+}
 ?>
 
 <!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Strict//EN"
@@ -232,7 +241,7 @@ function wocompleted() {
                         <td colspan="2" align="center">
                             <input type="submit" value="Submit Data" class="btn btn-primary">
                             <input name="submit_pdf" type="submit" value="Submit And View PDF" class="btn btn-info">
-                            <a href="workorder.php" class="btn"> Cancel</a>
+                            <a href="<?php echo $prev_url?>" class="btn"> Cancel</a>
                         </td>
                     </tr>
                     <tr>

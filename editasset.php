@@ -177,7 +177,7 @@ $doccat[4]      =   "Financial";
             var woID = $(this).data('workorderId') || 0;
             if(woID)
             {
-                window.location = "editworkorder.php?id=" + woID;
+                window.location = "editworkorder.php?id=" + woID+'&mod=editasset';
             }
         });
         if ($('#tblassetwo tbody.wo-list').length > 0) {

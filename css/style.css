@@ -1255,3 +1255,9 @@ input.auto-width {
     background-color: #FFAAB2;
     border: 1px solid #971C28;
 }
+.icon-tick {
+    display: inline-block;
+    width:16px;
+    height:16px;
+    background:url(../images/tick.png) top left no-repeat;
+}

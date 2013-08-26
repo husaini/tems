@@ -76,7 +76,19 @@ if ($usite_ids) {
 
     if($uclass_ids) {
         $uclass_ids         =   array_unique($uclass_ids);
-        $asset_class_opt    =  'AND asset_class.id IN('.implode(',', $uclass_ids).') ';
+        foreach ($uclass_ids as $key => $cid)
+        {
+            // Allowing "0" id as default
+            if (!$cid)
+            {
+                unset($uclass_ids[$key]);
+            }
+        }
+
+        if ($uclass_ids)
+        {
+            $asset_class_opt    =  'AND asset_class.id IN('.implode(',', $uclass_ids).') ';
+        }
     }
 }
 
@@ -91,17 +103,37 @@ switch($f) {
                         'asset_manufacturer.name '.
                     'FROM '.
                         'asset_class '.
-                    'JOIN '.
+                    'LEFT JOIN '.
                         'asset_type ON asset_type.classid = asset_class.id '.
-                    'JOIN '.
+                    'LEFT JOIN '.
                         'asset_model ON asset_model.typeid = asset_type.id '.
-                    'JOIN '.
+                    'LEFT JOIN '.
                         'asset_manufacturer ON asset_model.manuid = asset_manufacturer.id '.
-                    'WHERE '.
-                        "asset_model.typeid IN($ids) ".
-                    'AND '.
-                        "asset_manufacturer.id <> '$ie' ".
-                        $asset_class_opt.' '.
+                    'WHERE 1 ';
+
+        if ($ids)
+        {
+            foreach ($ids as $key => $value)
+            {
+                //allow "0" id as default
+                if (!$value)
+                {
+                    unset($ids[$key]);
+                }
+            }
+
+            if ($ids)
+            {
+                $sql    .=  "AND asset_model.typeid IN($ids) ";
+            }
+        }
+
+        if ($ie)
+        {
+            $sql    .=  "AND asset_manufacturer.id <> '$ie' ";
+        }
+
+        $sql    .=  $asset_class_opt.' '.
                     'ORDER BY '.
                         'asset_manufacturer.name';
 
@@ -120,11 +152,31 @@ switch($f) {
                         'asset_model ON asset_model.typeid = asset_type.id '.
                     'JOIN '.
                         'asset_manufacturer ON asset_model.manuid = asset_manufacturer.id '.
-                    'WHERE '.
-                        "asset_model.typeid IN($ids) ".
-                    'AND '.
-                        "asset_model.manuid = '$ie' ".
-                        $asset_class_opt.' '.
+                    'WHERE 1 ';
+
+        if ($ids)
+        {
+            foreach ($ids as $key => $value)
+            {
+                //allow "0" id as default
+                if (!$value)
+                {
+                    unset($ids[$key]);
+                }
+            }
+
+            if ($ids)
+            {
+                $sql    .=  "AND asset_model.typeid IN($ids) ";
+            }
+        }
+
+        if ($ie)
+        {
+            $sql    .=  "AND asset_model.manuid = '$ie' ";
+        }
+
+        $sql    .=  $asset_class_opt.' '.
                     'ORDER BY '.
                         'asset_model.name';
 
@@ -136,20 +188,42 @@ switch($f) {
                         'asset_type.id, '.
                         'asset_type.name '.
                     'FROM '.
-                        'asset_class '.
-                    'JOIN '.
-                        'asset_type ON asset_type.classid = asset_class.id '.
-                    'JOIN '.
+                        'asset_type '.
+                    'LEFT JOIN '.
+                        'asset_class ON asset_class.id = asset_type.classid '.
+                    'LEFT JOIN '.
                         'asset_model ON asset_model.typeid = asset_type.id '.
-                    'JOIN '.
+                    'LEFT JOIN '.
                         'asset_manufacturer ON asset_model.manuid = asset_manufacturer.id '.
-                    'WHERE '.
-                        "asset_type.classid IN($ids) ".
-                    'AND '.
-                        "asset_type.id <> '$ie' ".
-                        $asset_class_opt.' '.
+                    'WHERE 1 ';
+
+        if ($ids)
+        {
+            foreach ($ids as $key => $value)
+            {
+                //allow "0" id as default
+                if (!$value)
+                {
+                    unset($ids[$key]);
+                }
+            }
+
+            if ($ids)
+            {
+                $sql    .=  "AND asset_type.classid IN($ids) ";
+            }
+        }
+
+        if ($ie)
+        {
+            $sql    .=  "AND asset_type.id <> '$ie' ";
+        }
+
+        $sql    .=  $asset_class_opt.' '.
                     'ORDER BY '.
                         'asset_type.name';
+
+
         break;
 
     case "location":
@@ -198,19 +272,40 @@ switch($f) {
                         'asset_class.name '.
                     'FROM '.
                         'asset_class '.
-                    'JOIN '.
+                    'LEFT JOIN '.
                         'asset_type ON asset_type.classid = asset_class.id '.
-                    'JOIN '.
+                    'LEFT JOIN '.
                         'asset_model ON asset_model.typeid = asset_type.id '.
-                    'JOIN '.
+                    'LEFT JOIN '.
                         'asset_manufacturer ON asset_model.manuid = asset_manufacturer.id '.
-                    'WHERE '.
-                        "asset_class.id NOT IN($ids) ".
-                    'AND '.
-                        "asset_class.id <> '$ie' ".
-                        $asset_class_opt.' '.
-                    'ORDER BY '.
-                        'asset_class.name';
+                    'WHERE 1 ';
+
+        if ($ids)
+        {
+            foreach ($ids as $key => $value)
+            {
+                //allow "0" id as default
+                if (!$value)
+                {
+                    unset($ids[$key]);
+                }
+            }
+
+            if ($ids)
+            {
+                $sql    .=  "AND asset_class.id NOT IN($ids) ";
+            }
+        }
+
+        if ($ie)
+        {
+            $sql    .=  "AND asset_class.id <> '$ie' ";
+        }
+
+        $sql    .=  $asset_class_opt.' '.
+                        'ORDER BY '.
+                            'asset_class.name';
+        //echo $sql;
         break;
 }
 

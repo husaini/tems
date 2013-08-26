@@ -22,6 +22,13 @@ $usite_ids      =   array();
 $uloc_ids       =   array();
 $udept_ids      =   array();
 $uaccess        =   getSession('access');
+
+if(!$uaccess)
+{
+    $uaccess    =   getUserAccessList(getSession('uid'));
+    setSession('access', $uaccess);
+}
+
 if ($uaccess) {
     if(isset($uaccess['sites'])) {
         foreach ($uaccess['sites'] as $usite) {
@@ -196,7 +203,7 @@ function confdel(obj, sid) {
                                             <a href="editdept.php?id=<?php echo $results['id'];?>&amp;sid=<?php echo $id;?>&amp;tab=tabdept"><?php echo $results['name'];?></a>
                                         </td>
                                         <td>
-                                            <a href="deldept.php?id=<?php echo $results['id'];?>&amp;sid=<?php echo $id;?>&amp;tab=tabdept">Delete</a>
+                                            <a data-type="department" data-id="<?php echo $results['id'];?>" href="deldept.php?id=<?php echo $results['id'];?>&amp;sid=<?php echo $id;?>&amp;tab=tabdept" class="del-item">Delete</a>
                                         </td>
                                     </tr>
                                 <?php endwhile; ?>
@@ -226,6 +233,3 @@ function confdel(obj, sid) {
     </div>
 </body>
 </html>
-<?php
-$stmt->close();
-$mysqli->close();

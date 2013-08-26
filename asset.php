@@ -169,49 +169,51 @@ sqltoarray("select id, name from vendor where (type = 0 or type = 1) and status 
                                 </select>
                             </td>
                         </tr>
-                        <?php if (!($sid > 0 && $sid != 65535)){ ?>
-                        <tr>
-                            <td> Site </td>
-                            <td>
 
-                                <?php if ($sid == 65535): ?>
+                        <?php if (!($sid > 0 && $sid != 65535)):  ?>
+                            <tr>
+                                <td> Site </td>
+                                <td>
 
-                                    <select name="ssiteid" id="ssiteid">
-                                        <option value="0">ANY</option>
-                                        <?php
-                                            sqltoarray("select id, name from site where id in (" . $rem . ") order by name", $sites);
-                                            if ($usite_ids) {
-                                                foreach ($sites as $site_id => $site_name) {
-                                                    if(!in_array($site_id, $usite_ids)) {
-                                                        unset($sites[$site_id]);
+                                    <?php if ($sid == 65535): ?>
+
+                                        <select name="ssiteid" id="ssiteid">
+                                            <option value="0">ANY</option>
+                                            <?php
+                                                sqltoarray("select id, name from site where id in (" . $rem . ") order by name", $sites);
+                                                if ($usite_ids) {
+                                                    foreach ($sites as $site_id => $site_name) {
+                                                        if(!in_array($site_id, $usite_ids)) {
+                                                            unset($sites[$site_id]);
+                                                        }
                                                     }
                                                 }
-                                            }
-                                            optionize($sites);
-                                        ?>
-                                    </select>
+                                                optionize($sites);
+                                            ?>
+                                        </select>
 
-                                <?php else: ?>
+                                    <?php else: ?>
 
-                                    <select name="ssiteid" id="ssiteid">
-                                        <option value="0">ANY</option>
-                                        <?php
-                                            tabletoarray("site", $sites);
-                                            if ($usite_ids) {
-                                                foreach ($sites as $site_id => $site_name) {
-                                                    if(!in_array($site_id, $usite_ids)) {
-                                                        unset($sites[$site_id]);
+                                        <select name="ssiteid" id="ssiteid">
+                                            <option value="0">ANY</option>
+                                            <?php
+                                                tabletoarray("site", $sites);
+                                                if ($usite_ids) {
+                                                    foreach ($sites as $site_id => $site_name) {
+                                                        if(!in_array($site_id, $usite_ids)) {
+                                                            unset($sites[$site_id]);
+                                                        }
                                                     }
                                                 }
-                                            }
-                                            optionize($sites);
-                                        ?>
-                                    </select>
+                                                optionize($sites);
+                                            ?>
+                                        </select>
 
-                                <?php endif; ?>
-                            </td>
-                        </tr>
-                        <?php }?>
+                                    <?php endif; ?>
+                                </td>
+                            </tr>
+                        <?php endif; ?>
+
                         <tr>
                             <td>Department</td>
                             <td><select name="sdepartment_id" id="sdepartment_id"><option value="0"> ANY </option></select></td>
@@ -329,53 +331,61 @@ sqltoarray("select id, name from vendor where (type = 0 or type = 1) and status 
                     <p>
                         <a href="csv.php" class="btn btn-primary">or Upload CSV/Excel</a>
                     </p>
+                    <div class="clear"></div>
+                    <p>  <span class="required">*</span> Mandatory Field </p>
                     <form id="new_asset" name="new_asset" method="post" action="mod.php">
                         <input type="hidden" name="func" value="add_asset">
                         <table  class="full-width no-border">
                             <tr>
-                                <td> Asset No </td>
+                                <td>Asset No </td>
                                 <td>
-                                    <input type="text" name="assetno" size="30" maxlength="15" value="">
+                                    <input required="required" type="text" name="assetno" id="iasset_no" size="30" maxlength="15" value="" class="validate[required]">
                                 </td>
                             </tr>
                             <tr>
-                                <td> Category <span class="required">*</span> </td>
+                                <td>Category <span class="required">*</span> </td>
                                 <td>
-                                    <select required="required" name="classid" id="classid" class="validate[required]">
-                                    </select>
-                                    <select required="required" name="typeid" id="typeid" class="validate[required]">
-                                    </select>
+                                    <select required="required" name="classid" id="classid" class="validate[required]"></select>
                                 </td>
                             </tr>
                             <tr>
-                                <td> Manufacturer/Model <span class="required">*</span> </td>
+                                <td>Type <span class="required">*</span> </td>
                                 <td>
-                                    <select required="required" name="manuid" id="manuid" class="validate[required]">
-                                    </select>
-                                    <select required="required" name="modelid" id="modelid" class="validate[required]">
-                                    </select>
+                                    <select required="required" name="typeid" id="typeid" class="validate[required]"></select>
                                 </td>
                             </tr>
                             <tr>
-                                <td> Serial No <span class="required">*</span> </td>
+                                <td>Manufacturer <span class="required">*</span> </td>
+                                <td>
+                                    <select required="required" name="manuid" id="manuid" class="validate[required]"></select>
+                                </td>
+                            </tr>
+                            <tr>
+                                <td>Model <span class="required">*</span> </td>
+                                <td>
+                                    <select required="required" name="modelid" id="modelid" class="validate[required]"></select>
+                                </td>
+                            </tr>
+                            <tr>
+                                <td>Serial No <span class="required">*</span> </td>
                                 <td>
                                     <input required="required" type="text" id="serialno" name="serialno" size="30" maxlength="30" value="" class="validate[required]">
                                 </td>
                             </tr>
                             <tr>
-                                <td> Reference No </td>
+                                <td>Reference No </td>
                                 <td>
                                     <input type="text" name="refno" size="30" maxlength="30" value="">
                                 </td>
                             </tr>
                             <tr>
-                                <td> Report No </td>
+                                <td>Report No </td>
                                 <td>
                                     <input type="text" name="orderno" size="30" maxlength="30" value="">
                                 </td>
                             </tr>
                             <tr>
-                                <td> Status </td>
+                                <td>Status </td>
                                 <td>
                                     <select name="statusid">
                                         <?php optionize($assetstatus); ?>
@@ -384,10 +394,10 @@ sqltoarray("select id, name from vendor where (type = 0 or type = 1) and status 
                             </tr>
                             <?php if (!($sid > 0 && $sid != 65535)): ?>
                             <tr>
-                                <td> site <span class="required">*</span> </td>
+                                <td>Site <span class="required">*</span> </td>
                                 <td>
-                                    <select required="required" name="siteid" id="siteid">
-                                        <option></option>
+                                    <select required="required" name="siteid" id="siteid" class="validate[required]">
+                                        <option value="">- Select Site -</option>
                                         <?php optionize($sites);?>
                                     </select>
                                 </td>
@@ -395,14 +405,15 @@ sqltoarray("select id, name from vendor where (type = 0 or type = 1) and status 
                             <?php endif; ?>
                             <tr>
                                 <td>Department <span class="required">*</span> </td>
-                                <td><select name="department_id" id="department_id"></select></td>
+                                <td><select name="department_id" id="department_id" class="validate[required]"></select></td>
                             </tr>
                             <tr>
-                                <td> Location <span class="required">*</span> </td>
+                                <td>Location <span class="required">*</span> </td>
                                 <td>
                                     <?php if ($sid > 0 && $sid != 65535): ?>
                                         <input type="hidden" name="siteid" value="<?php echo $sid?>" />
-                                        <select required="required" name="locationid">
+                                        <select required="required" name="locationid" class="validate[required]">
+                                            <option value="">- Select Location -</option>
                                             <?php optionize($locs);?>
                                         </select>
                                     <?php else: ?>
@@ -412,45 +423,46 @@ sqltoarray("select id, name from vendor where (type = 0 or type = 1) and status 
                             </tr>
 
                             <tr>
-                                <td> Purchase Date </td>
+                                <td>Purchase Date </td>
                                 <td>
                                     <input type="text" name="dtpurchase" id="dtpurchase" size="10" maxlength="15" value="" class="validate[optional,custom[date]] dp">
                                 </td>
                             </tr>
                             <tr>
-                                <td> Supplier </td>
+                                <td>Supplier </td>
                                 <td>
                                     <select name="supplid" id="supplid">
+                                        <option value="">- Select Supplier -</option>
                                         <?php optionize($supplier); ?>
                                     </select>
                                 </td>
                             </tr>
                             <tr>
-                                <td> Price (RM) </td>
+                                <td>Price (RM) </td>
                                 <td>
                                     <input type="text" name="price" size="30" maxlength="20" value="">
                                 </td>
                             </tr>
                             <tr>
-                                <td> Warranty Start </td>
+                                <td>Warranty Start </td>
                                 <td>
                                     <input type="text" name="dtwrntstart" id="dtwrntstart" size="10" maxlength="15" value="" class="validate[optional,custom[date]] dp">
                                 </td>
                             </tr>
                             <tr>
-                                <td> Warranty End </td>
+                                <td>Warranty End </td>
                                 <td>
                                     <input type="text" name="dtwrntend" id="dtwrntend" size="10" maxlength="15" value="" class="validate[optional,custom[date]] dp">
                                 </td>
                             </tr>
                             <tr>
-                                <td> PPM Start Date </td>
+                                <td>PPM Start Date </td>
                                 <td>
                                     <input type="text" name="dtppmstart" id="dtppmstart" size="10" maxlength="15" value="" class="validate[optional,custom[date]] dp">
                                 </td>
                             </tr>
                             <tr>
-                                <td> PPM Frequency </td>
+                                <td>PPM Frequency </td>
                                 <td>
                                     <select name="ppmfreq">
                                         <option value="0"> None </option>
@@ -464,7 +476,7 @@ sqltoarray("select id, name from vendor where (type = 0 or type = 1) and status 
                                 </td>
                             </tr>
                             <tr>
-                                <td> Remarks (if any) </td>
+                                <td>Remarks (if any) </td>
                                 <td>
                                     <textarea id="arem" name="arem" rows="2" cols="55"></textarea>
                                 </td>
@@ -476,7 +488,7 @@ sqltoarray("select id, name from vendor where (type = 0 or type = 1) and status 
                             </tr>
                         </table>
                     </form>
-                    <p>  <span class="required">*</span> Mandatory Field </p>
+
 
                 <?php else: ?>
                     <p class="c2"> You are not authorized to use this function. </p>
@@ -674,9 +686,15 @@ sqltoarray("select id, name from vendor where (type = 0 or type = 1) and status 
             this.targetId = null;
             this.addEmpty = false;
             this.url = 'selectget.php';
-            this.defaultOpt = '<option></option>';
+            this.defaultOptText = '';
+            this.defaultOpt = '<option value="">'+this.defaultOptText+'</option>';
 
             var self = this;
+
+            function getDefaultOption() {
+                return '<option value="">'+self.defaultOptText+'</option>'
+            }
+
 
             this.get = function() {
 
@@ -691,7 +709,7 @@ sqltoarray("select id, name from vendor where (type = 0 or type = 1) and status 
                         return window.top.location.href = window.top.location.href;
                     }
                     if (self.addEmpty && typeof(self.addEmpty) == 'boolean') {
-                        options +=  self.defaultOpt;
+                        options +=  getDefaultOption();
                     }
                     for (var i = 0; i < j.length; i++) {
                         options += '<option value="' + j[i].optionValue + '">' + j[i].optionDisplay + '</option>';
@@ -709,6 +727,7 @@ sqltoarray("select id, name from vendor where (type = 0 or type = 1) and status 
         var classOpt = new SelectOption();
         classOpt.targetId = 'classid';
         classOpt.addEmpty = true;
+        classOpt.defaultOptText = '- Select Category -';
         classOpt.get();
 
         var searchOpt = new SelectOption();
@@ -717,10 +736,14 @@ sqltoarray("select id, name from vendor where (type = 0 or type = 1) and status 
         searchOpt.get();
 
         $('#classid').change(function() {
+            if($(this).val() == '') return;
             var typeOpt = new SelectOption();
             typeOpt.targetId = 'typeid';
             typeOpt.f = 'typeclass';
             typeOpt.id = $(this).val();
+            typeOpt.addEmpty = true;
+            typeOpt.defaultOptText = '- Select Type -';
+
 
             typeOpt.callback = function(data) {
                 if(!data || data.length == 0) {
@@ -732,6 +755,8 @@ sqltoarray("select id, name from vendor where (type = 0 or type = 1) and status 
                 manuOpt.id = data[0].optionValue;
                 manuOpt.f = 'manutype';
                 manuOpt.targetId = 'manuid';
+                manuOpt.addEmpty = true;
+                manuOpt.defaultOptText = '- Select Manufacturer -';
                 manuOpt.callback = function(d) {
                     if(!d || d.length == 0) {
                         $('#modelid').empty();
@@ -742,6 +767,8 @@ sqltoarray("select id, name from vendor where (type = 0 or type = 1) and status 
                     modelidOpt.ie = d[0].optionValue;
                     modelidOpt.f = 'modeltype';
                     modelidOpt.targetId = 'modelid';
+                    modelidOpt.addEmpty = true;
+                    modelidOpt.defaultOptText = '- Select Model -';
                     modelidOpt.get();
                 };
                 manuOpt.get();
@@ -751,11 +778,14 @@ sqltoarray("select id, name from vendor where (type = 0 or type = 1) and status 
         });
 
         $('#typeid').change(function() {
+            if($(this).val() == '') return;
             var typeId = $(this).val();
             var manuOpt = new SelectOption();
             manuOpt.id = typeId;
             manuOpt.f = 'manutype';
             manuOpt.targetId = 'manuid';
+            manuOpt.addEmpty = true;
+            manuOpt.defaultOptText = '- Select Manufacturer -';
             manuOpt.get();
             manuOpt.callback = function(d) {
                 if(!d || d.length == 0) {
@@ -767,6 +797,8 @@ sqltoarray("select id, name from vendor where (type = 0 or type = 1) and status 
                 modelidOpt.ie = d[0].optionValue;
                 modelidOpt.f = 'modeltype';
                 modelidOpt.targetId = 'modelid';
+                modelidOpt.addEmpty = true;
+                modelidOpt.defaultOptText = '- Select Model -';
                 modelidOpt.get();
 
             };
@@ -774,11 +806,14 @@ sqltoarray("select id, name from vendor where (type = 0 or type = 1) and status 
         });
 
         $('#manuid').change(function() {
+            if($(this).val() == '') return;
             var modelidOpt = new SelectOption();
             modelidOpt.id = $('#typeid').val();
             modelidOpt.ie = $(this).val();
             modelidOpt.f = 'modeltype';
             modelidOpt.targetId = 'modelid';
+            modelidOpt.addEmpty = true;
+            modelidOpt.defaultOptText = '- Select Model -';
             modelidOpt.get();
             return false;
         });
@@ -797,6 +832,8 @@ sqltoarray("select id, name from vendor where (type = 0 or type = 1) and status 
             deptOpt.targetId = 'department_id';
             deptOpt.id = $(this).val();
             deptOpt.f = 'department';
+            deptOpt.addEmpty = true;
+            deptOpt.defaultOptText = '- Select Department -';
             deptOpt.callback = function(){$('#department_id').change();}
             deptOpt.get();
             return false;
@@ -808,6 +845,8 @@ sqltoarray("select id, name from vendor where (type = 0 or type = 1) and status 
             locationOpt.targetId = 'locationid';
             locationOpt.id = $(this).val();
             locationOpt.f = 'location';
+            locationOpt.addEmpty = true;
+            locationOpt.defaultOptText = '- Select Location -';
             locationOpt.get();
             return false;
         });
@@ -948,6 +987,39 @@ sqltoarray("select id, name from vendor where (type = 0 or type = 1) and status 
                 $('.alert-success').fadeOut('slow');
             }, 1500);
         }
+
+        $(document).bind("keydown", function(e){
+            if(e.which == 13) {
+                event.preventDefault(); //stop event
+            }
+            return true;
+        });
+
+        $('input#iasset_no').blur(function(e) {
+            var value = $.trim(this.value);
+            var target = $(this);
+            if(value.length == 0) return;
+            if(target.next('.required').length > 0) {
+                target.next('.required').empty().remove();
+            }
+            if(target.next('.icon-tick').length > 0) {
+                target.next('.icon-tick').empty().remove();
+            }
+            $.getJSON('ajaxfunc.php?op=assetno&value='+value, function(response) {
+                if(response) {
+                    if(response == 'session_expired') {
+                        return window.top.location.href = window.top.location.href;
+                    }
+                    if(typeof response.exist != 'undefined') {
+                        if(response.exist) {
+                            target.after('<span class="required">Asset no. already exist!</span>');
+                        } else {
+                            target.after('<i class="icon-tick"></i>');
+                        }
+                    }
+                }
+            });
+        });
     });
 
     </script>

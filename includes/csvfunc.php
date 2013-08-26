@@ -221,6 +221,27 @@ function csv_add_class($name)
         return;
     }
 
+    // We already set unknown class with id 0. this is for unknow class
+    // just in case user deleted the record, we re-insert it!
+    $sql            =   'SELECT COUNT(1) FROM asset_class WHERE id = 0';
+    $result         =   $mysqli->query($sql);
+    list($count)    =   $result->fetch_row();
+
+    if($count && stripos('unknown', $name) !== false)
+    {
+        //found it. so skip this;
+        return 0;
+    }
+    elseif (!$count)
+    {
+        //user delete this, re-add it!
+        $sql    =   'INSERT INTO `asset_class`(`id`, `name`) VALUES(?,?)';
+        $stmt   =   $mysqli->prepare($sql);
+        $stmt->bind_param('is', 0, 'UNKNOWN CLASS');
+        $stmt->execute();
+        return 0; //default type id for unknown model
+    }
+
     $name       =   mysqli_real_escape_string($mysqli, $name);
     $sql        =   "SELECT `id` FROM `asset_class` WHERE TRIM(LOWER(`name`)) = '$name'";
     $result     =   $mysqli->query($sql) or die(mysqli_error($mysqli));
@@ -282,6 +303,7 @@ function csv_add_department($dept, $site_id)
         }
         $stmt->close();
     }
+
     return $dept_id;
 }
 
@@ -331,6 +353,28 @@ function csv_add_manufacturer($name, $origin=null)
         return;
     }
 
+    // We already set unknown manufacturer with id 0. this is for unknow manufacturer
+    // just in case user deleted the record, we re-insert it!
+    $sql            =   'SELECT COUNT(1) FROM asset_manufacturer WHERE id = 0';
+    $result         =   $mysqli->query($sql);
+    list($count)    =   $result->fetch_row();
+
+    if($count && stripos('unknown', $name) !== false)
+    {
+        //found it. so skip this;
+        $type_id   =   0;
+        return $type_id;
+    }
+    elseif (!$count)
+    {
+        //user delete this, re-add it!
+        $sql    =   'INSERT INTO `asset_manufacturer`(`id`, `name`) VALUES(?,?)';
+        $stmt   =   $mysqli->prepare($sql);
+        $stmt->bind_param('is', 0, 'UNKNOWN MANUFACTURER');
+        $stmt->execute();
+        return 0; //default type id for unknown manufacturer
+    }
+
     $name       =   mysqli_real_escape_string($mysqli, $name);
     $origin     =   mysqli_real_escape_string($mysqli, $origin);
     $sql        =   "SELECT `id` FROM `asset_manufacturer` WHERE TRIM(LOWER(`name`)) = TRIM(LOWER('$name'))";
@@ -370,6 +414,28 @@ function csv_add_model($name)
         return;
     }
 
+    // We already set unknown model with id 0. this is for unknow model
+    // just in case user deleted the record, we re-insert it!
+    $sql            =   'SELECT COUNT(1) FROM asset_model WHERE id = 0';
+    $result         =   $mysqli->query($sql);
+    list($count)    =   $result->fetch_row();
+
+    if($count && stripos('unknown', $name) !== false)
+    {
+        //found it. so skip this;
+        $model_id   =   0;
+        return $model_id;
+    }
+    elseif (!$count)
+    {
+        //user delete this, re-add it!
+        $sql    =   'INSERT INTO `asset_model`(`id`, `name`, `manuid`, `typeid`) VALUES(?,?,?,?)';
+        $stmt   =   $mysqli->prepare($sql);
+        $stmt->bind_param('isii', 0, 'UNKNOWN MODEL', 0, 0);
+        $stmt->execute();
+        return 0; //default type id for unknown model
+    }
+
     $name           =   mysqli_real_escape_string($mysqli, $name);
     $sql            =   "SELECT `id` FROM `asset_model` WHERE TRIM(LOWER(`name`)) = TRIM(LOWER('$name')) ";
 
@@ -407,6 +473,28 @@ function csv_add_type($name, $class_id)
         return;
     }
 
+    // We already set unknown type with id 0. this is for unknow type
+    // just in case user deleted the record, we re-insert it!
+    $sql            =   'SELECT COUNT(1) FROM asset_type WHERE id = 0';
+    $result         =   $mysqli->query($sql);
+    list($count)    =   $result->fetch_row();
+
+    if($count && stripos('unknown', $name) !== false)
+    {
+        //found it. so skip this;
+        $type_id   =   0;
+        return $type_id;
+    }
+    elseif (!$count)
+    {
+        //user delete this, re-add it!
+        $sql    =   'INSERT INTO `asset_type`(`id`, `name`, `classid`) VALUES(?,?,?)';
+        $stmt   =   $mysqli->prepare($sql);
+        $stmt->bind_param('isi', 0, 'UNKNOWN TYPE', 0);
+        $stmt->execute();
+        return 0; //default type id for unknown type
+    }
+
     $name       =   mysqli_real_escape_string($mysqli, $name);
     $site_id    =   mysqli_real_escape_string($mysqli, $class_id);
     $sql        =   "SELECT `id` FROM `asset_type` WHERE TRIM(LOWER(`name`)) = '$name' AND `classid`='$class_id'";
@@ -421,7 +509,7 @@ function csv_add_type($name, $class_id)
 
     if(!$type_id)
     {
-        // New department
+        // New type
         $sql    =   'INSERT INTO `asset_type`(`name`, `classid`) VALUES(?,?)';
         $stmt   =   $mysqli->prepare($sql);
         $stmt->bind_param('si', $type_id, $class_id);
@@ -440,7 +528,7 @@ function csv_add_user_department($dept_id)
     global $mysqli;
     $uid    =   getSession('uid');
 
-    if(!$uid || !$dept_id)
+    if($uid === null || !$dept_id)
     {
         return;
     }
@@ -452,7 +540,7 @@ function csv_add_user_location($loc_id)
     global $mysqli;
     $uid    =   getSession('uid');
 
-    if(!$uid || !$loc_id)
+    if($uid === null  || !$loc_id)
     {
         return;
     }
@@ -465,10 +553,11 @@ function csv_add_user_site($site_id)
     global $mysqli;
     $uid    =   getSession('uid');
 
-    if(!$uid || !$site_id)
+    if($uid === null || !$site_id)
     {
         return;
     }
+
     addUserAccess('site', $site_id, $uid);
 }
 
@@ -688,26 +777,6 @@ function csv_load($fileinput, $show_empty_serial=false, $is_temp_file=false, $au
             // Since this is new site, give current user access to this site
             csv_add_user_site($site_id);
 
-            if ($serialno)
-            {
-                /*
-                if (!in_array($serialno, $serials))
-                {
-                    $serials[]      =   $serialno;
-                }
-                else
-                {
-                    $is_duplicated  =   true; //only if user choose not to include empty serial no
-                }
-
-                //double check with existing data in DB for duplicated serial no
-                if(isAssetSerialExist($serialno, $site_id))
-                {
-                    $is_duplicated  =   true;
-                }
-                */
-            }
-
             if($is_duplicated)
             {
                 //get other asset which duplicate this
@@ -723,23 +792,6 @@ function csv_load($fileinput, $show_empty_serial=false, $is_temp_file=false, $au
 
             $site_code      =   ($site_id < 10) ? '0'.$site_id : "$site_id";
             $curr_assetno   =   null;
-
-            /*
-            if(empty($serialno))
-            {
-                //use dummy
-                $sql            =   "SELECT COUNT(1) FROM asset WHERE serialno LIKE('UNKNOWN%') AND siteid = ".mysqli_real_escape_string($mysqli, $site_id);
-                $result         =   $mysqli->query($sql) or die(mysqli_error($mysqli));
-                list($last_serial)  =   $result->fetch_row();
-                mysqli_free_result($result);
-                $dummy_serial_count =   $last_serial + 1;
-                $serialno    =   'UNKNOWN_'.$site_code.'_'.$dummy_serial_count;
-            }
-            else
-            {
-                $curr_assetno    =   isAssetSerialExist($serialno, $site_id); //return current asset no if found
-            }
-            */
 
             $tems_no    =   null;
 
@@ -822,14 +874,14 @@ function csv_load($fileinput, $show_empty_serial=false, $is_temp_file=false, $au
             }
             else
             {
-                // Auto save location
-                if ($loc_id = csv_add_location($arg['location'], $arg['siteid']))
-                {
-                    $arg['locationid']  =   $loc_id;
-                }
                 if ($dept_id = csv_add_department($arg['department'], $arg['siteid']))
                 {
                     $arg['department_id']  =   $dept_id;
+                }
+
+                if ($loc_id = csv_add_location($arg['location'], $dept_id))
+                {
+                    $arg['locationid']  =   $loc_id;
                 }
 
                 //add user to this location

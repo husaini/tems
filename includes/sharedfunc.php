@@ -23,6 +23,11 @@ function addUserAccess($type,$id,$uid=null)
     $uid    =   intval($uid, 10);
     $id     =   intval($id, 10);
 
+    if ($uid == getSession('uid'))
+    {
+        $current_user   =   true;
+    }
+
     switch ($type)
     {
         case 'site':
@@ -161,9 +166,9 @@ function addAdminAccess($type,$id)
                 }
 
                 //update user session if uid is current user
-                if ($current_user)
+                if ($current_user == $uid)
                 {
-                    setSession('access', getUserAccessList($uid));
+                    updateUserAccess($uid);
                 }
             }
         }
@@ -399,7 +404,7 @@ function getAdmins()
 
 function getUserAccessList($uid) {
 
-    if(!$uid || !is_numeric($uid)) {
+    if($uid === null || !is_numeric($uid)) {
         return;
     }
 

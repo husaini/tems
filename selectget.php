@@ -93,7 +93,6 @@ if ($usite_ids) {
 }
 
 $ie     =   (!is_numeric($ie)) ? 0 : intval($ie, 10);
-$ids    =   implode(',',$id);
 
 switch($f) {
     case "manutype":
@@ -124,7 +123,7 @@ switch($f) {
 
             if ($ids)
             {
-                $sql    .=  "AND asset_model.typeid IN($ids) ";
+                $sql    .=  'AND asset_model.typeid IN('.implode(',', $ids).') ';
             }
         }
 
@@ -167,7 +166,7 @@ switch($f) {
 
             if ($ids)
             {
-                $sql    .=  "AND asset_model.typeid IN($ids) ";
+                $sql    .=  'AND asset_model.typeid IN('.implode(',', $ids).') ';
             }
         }
 
@@ -210,7 +209,7 @@ switch($f) {
 
             if ($ids)
             {
-                $sql    .=  "AND asset_type.classid IN($ids) ";
+                $sql    .=  'AND asset_type.classid IN('.implode(',', $ids).') ';
             }
         }
 
@@ -293,7 +292,7 @@ switch($f) {
 
             if ($ids)
             {
-                $sql    .=  "AND asset_class.id NOT IN($ids) ";
+                $sql    .=  'AND asset_class.id NOT IN('.implode(',', $ids).') ';
             }
         }
 

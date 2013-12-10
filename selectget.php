@@ -35,6 +35,7 @@ $asset_class_opt=   '';
 $site_opt       =   '';
 $loc_opt        =   '';
 $dept_opt       =   '';
+$ids            =   implode(',', $id);
 
 if ($uaccess) {
     if(isset($uaccess['sites'])) {

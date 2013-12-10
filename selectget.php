@@ -97,7 +97,7 @@ $ie     =   (!is_numeric($ie)) ? 0 : intval($ie, 10);
 
 switch($f) {
     case "manutype":
-
+        $ids    =   $id;
         $sql    =   'SELECT DISTINCT '.
                         'asset_manufacturer.id, '.
                         'asset_manufacturer.name '.
@@ -140,7 +140,7 @@ switch($f) {
         break;
 
     case "modeltype":
-
+        $ids    =   $id;
         $sql    =   'SELECT DISTINCT '.
                         'asset_model.id, '.
                         'asset_model.name '.
@@ -183,7 +183,7 @@ switch($f) {
         break;
 
     case "typeclass":
-
+        $ids    =   $id;
         $sql    =   'SELECT DISTINCT '.
                         'asset_type.id, '.
                         'asset_type.name '.
@@ -266,7 +266,7 @@ switch($f) {
         break;
 
     default:
-
+        $ids    =   $id;
         $sql    =   'SELECT DISTINCT '.
                         'asset_class.id, '.
                         'asset_class.name '.

@@ -60,7 +60,31 @@ switch($func) {
             $arem = empty($_POST['arem'])? null : $_POST['arem'];
             $uid = $_SESSION['uid'];
 
-            $stmt = $mysqli->prepare("INSERT INTO asset (assetno, classid, typeid, manuid, modelid, serialno, refno, orderno, purchasedate, warrantystart, warrantyend, ppmstart, ppmfreq, supplierid, price, status, siteid, locationid, department_id, remarks, author, created, modified) VALUES  (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, NOW(), NOW())");
+            $stmt = $mysqli->prepare('INSERT INTO asset ('.
+                        'assetno,'.
+                        'classid,'.
+                        'typeid,'.
+                        'manuid,'.
+                        'modelid,'.
+                        'serialno,'.
+                        'refno,'.
+                        'orderno,'.
+                        'purchasedate,'.
+                        'warrantystart,'.
+                        'warrantyend,'.
+                        'ppmstart,'.
+                        'ppmfreq,'.
+                        'supplierid,'.
+                        'price,'.
+                        'status,'.
+                        'siteid,'.
+                        'locationid,'.
+                        'department_id,'.
+                        'remarks,'.
+                        'author,'.
+                        'created,'.
+                        'modified) VALUES  ('.
+                            '?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, NOW(), NOW())') or die(mysqli_error($mysqli));
             $stmt->bind_param('siiiissssssssidiiiisi', $ano, $acid, $atid, $amid, $amdid, $asno, $arno, $aono, $apdt, $awst, $awnd, $appmst, $appmfq, $aspid, $aprc, $astat, $asid, $alid, $adept, $arem, $uid);
 
             if (!$stmt->execute()) {

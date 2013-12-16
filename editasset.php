@@ -140,8 +140,8 @@ $doccat[4]      =   "Financial";
 <script type="text/javascript" src="js/jquery.min.js"></script>
 <script type="text/javascript" src="js/jquery-ui.min.js"></script>
 <script type="text/javascript" src="fancybox/jquery.fancybox.js"></script>
-<script type="text/javascript" src="js/jquery.validationengine.js"></script>
-<script type="text/javascript" src="js/jquery.validationengine-en.js"></script>
+<script type="text/javascript" src="js/jquery.validationengine-1.6.4.js"></script>
+<script type="text/javascript" src="js/jquery.validationengine-en-1.6.4.js"></script>
 <script type="text/javascript" src="datatables/jquery.datatables.js"></script>
 <script type="text/javascript">
     $(function() {

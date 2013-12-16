@@ -63,7 +63,6 @@
             <p>
                 <label class="auto">Select Class</label>
                 <select required="required" name="clas">
-                    <option value="<?php echo $t1; ?>"><?php echo $d2['name']; ?></option>
                     <?php
                         $q = mysql_query("select * from asset_class");
                         while ($row = mysql_fetch_assoc($q)) : ?>

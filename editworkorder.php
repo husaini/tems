@@ -96,8 +96,8 @@ if(isset($_GET['mod']))
 <link rel="stylesheet" href="css/jquery.validationengine.css" type="text/css" media="screen">
 <script type="text/javascript" src="js/jquery.min.js"></script>
 <script type="text/javascript" src="js/jquery-ui.min.js"></script>
-<script type="text/javascript" src="js/jquery.validationengine.js"></script>
-<script type="text/javascript" src="js/jquery.validationengine-en.js"></script>
+<script type="text/javascript" src="js/jquery.validationengine-1.6.4.js"></script>
+<script type="text/javascript" src="js/jquery.validationengine-en-1.6.4.js"></script>
 <script type="text/javascript">
 $(document).ready(function() {
     if($('.alert-success').length > 0) {

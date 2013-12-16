@@ -64,8 +64,7 @@
                     <?php
                         $q = mysql_query("select * from asset_class");
                         while ($row = mysql_fetch_assoc($q)) : ?>
-                            <option value="<?php echo $row['id'];?>" <?php echo ($row['id'] == $t1) ? 
-'selected="selected"':'';?>><?php echo $row['name']; ?></option>
+                            <option value="<?php echo $row['id'];?>" <?php echo ($row['id'] == $t1) ? 'selected="selected"':'';?>><?php echo $row['name']; ?></option>
                         <?php endwhile; ?>
                 </select>
             </p>

@@ -13,7 +13,7 @@
 
     if ($_POST) {
         foreach ($_POST as $key => $value) {
-            $_POST[$key] = mysql_real_escape_string(trim(value));
+            $_POST[$key] = mysql_real_escape_string(trim($value));
         }
 
         $cat    =   (isset($_POST['cat'])) ? $_POST["cat"] : null;
@@ -23,12 +23,10 @@
 
         if($tap && $cat && $clas && $did) {
             $q = mysql_query("update asset_type set name ='$cat', classid = '$clas' where id = '$did'", $link);
-
             if(mysql_affected_rows($link))
             {
                 setSession('asset_item_updated', 'Category was successfully updated.');
             }
-
             header('location: library.php?tab='.$tab);
             exit();
         }
@@ -66,7 +64,7 @@
                     <?php
                         $q = mysql_query("select * from asset_class");
                         while ($row = mysql_fetch_assoc($q)) : ?>
-                        <option value="<?php echo $row['id'];?>"><?php echo $row['name']; ?></option>
+                            <option value="<?php echo $row['id'];?>" <?php echo ($row['id'] == $t1) ? 'selected="selected"':'';?>><?php echo $row['name']; ?></option>
                         <?php endwhile; ?>
                 </select>
             </p>

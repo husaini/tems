@@ -88,7 +88,7 @@ if ($usite_ids) {
 
         if ($uclass_ids)
         {
-            $asset_class_opt    =  'AND asset_class.id IN('.implode(',', $uclass_ids).') ';
+            //$asset_class_opt    =  'AND asset_class.id IN('.implode(',', $uclass_ids).') ';
         }
     }
 }

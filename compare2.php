@@ -482,15 +482,16 @@ if($rem) {
         });
 
         $.getJSON("selectget.php",{id: 0, ie: 0, f: "init"}, function(j) {
-                var options = '<option></option>';
+                var options = '<option>ANY</option>';
                 for (var i = 0; i < j.length; i++) {
-                    options += '<option value="' + j[i].optionValue + '">' + j[i].optionDisplay + '</option>';
+                  options += '<option value="' + j[i].optionValue + '">' + j[i].optionDisplay + '</option>';
                 }
                 $('#classid').html(options);
                 $('#classid option:first').attr('selected', 'selected');
         });
 
         $('#classid').change(function() {
+          console.log("test");
             $.getJSON("selectget.php",{id: $(this).val(), ie: 0, f: "typeclass"}, function(j) {
                 var options = '';
                 for (var i = 0; i < j.length; i++) {
@@ -574,6 +575,7 @@ if($rem) {
         });
 
         $.getJSON("searchget.php",{id: 0, ie: 0, f: "init"}, function(j) {
+          console.log(j);
                 var options = '';
                 for (var i = 0; i < j.length; i++) {
                     options += '<option value="' + j[i].optionValue + '">' + j[i].optionDisplay + '</option>';

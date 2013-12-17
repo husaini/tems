@@ -49,7 +49,7 @@
                         <a href="<?php echo $base_url?>/asset.php" target="frame_right"><img src="images/browse.gif" border="0">Asset</a>
                         <a href="<?php echo $base_url?>/workorder.php" target="frame_right"><img src="images/modify.gif" border="0">Work Order</a>
                         <a href="<?php echo $base_url?>/printoption.php" target="frame_right"><img src="images/browse.gif" border="0">Report</a>
-                        <a href="<?php echo $base_url?>/compare2.php" target="frame_right"><img src="images/reports.gif" border="0">Compare</a>
+                        <!--<a href="<?php echo $base_url?>/compare2.php" target="frame_right"><img src="images/reports.gif" border="0">Compare</a>-->
                         <a href="<?php echo $base_url?>/vendor.php" target="frame_right"><img src="images/user.gif" border="0">Vendor</a>
                     </td>
                 </tr>

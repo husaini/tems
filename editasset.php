@@ -467,7 +467,7 @@ $doccat[4]      =   "Financial";
                             <td><?php echo $results['id']; ?></td>
                         </tr>
                         <tr>
-                            <td>Asset No</td>
+                            <td>TEMS No</td>
                             <td>
                                 <input type="text" name="assetno" size="30" maxlength="30" value="<?php echo $results['assetno']; ?>" disabled />
                             </td>

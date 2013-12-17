@@ -115,7 +115,7 @@ sqltoarray("select id, name from vendor where (type = 0 or type = 1) and status 
                 <form method="post" action="searchasset.php">
                     <table class="full-width no-border">
                         <tr>
-                            <td> Asset No </td>
+                            <td> TEMS No </td>
                             <td>
                                 <input type="text" name="sassetno" size="30" maxlength="15" value="">
                             </td>
@@ -337,7 +337,7 @@ sqltoarray("select id, name from vendor where (type = 0 or type = 1) and status 
                         <input type="hidden" name="func" value="add_asset">
                         <table  class="full-width no-border">
                             <tr>
-                                <td>Asset No </td>
+                                <td>TEMS No </td>
                                 <td>
                                     <input required="required" type="text" name="assetno" id="iasset_no" size="30" maxlength="15" value="" class="validate[required]">
                                 </td>

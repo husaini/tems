@@ -177,8 +177,8 @@ $sQuery =   'SELECT SQL_CALC_FOUND_ROWS '.
                 'site.name AS sitename, '.
                 'site_department.id AS site_department_id,'.
                 'site_department.name AS department, '.
-                'site_location.id AS site_location_id,'.
-                'site_location.name AS locname, '.
+                //'department_location.id AS site_location_id,'.
+                'department_location.name AS locname, '.
                 'lastsvc, '.
                 "IF(IFNULL(asset.ppmstart, '') > IFNULL(asset.lastsvc, ''), asset.ppmstart, asset.lastsvc) + INTERVAL (12/asset.ppmfreq) MONTH AS nextsvc ".
             'FROM '.
@@ -196,7 +196,7 @@ $sQuery =   'SELECT SQL_CALC_FOUND_ROWS '.
             'INNER JOIN '.
                 'site ON asset.siteid = site.id '.
             'LEFT JOIN '.
-                'site_location ON site_location.id = asset.locationid '.
+                'department_location ON department_location.depid = asset.department_id AND department_location.id = asset.locationid '.
             'LEFT JOIN '.
                 'site_department ON site_department.id = asset.department_id '.
             $sWhere.' '.

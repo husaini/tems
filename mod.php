@@ -56,7 +56,7 @@ switch($func) {
             $alid = empty($_POST['locationid'])? null : $_POST['locationid'];
             $adept = empty($_POST['department_id'])? null : $_POST['department_id'];
             $appmst = empty($_POST['dtppmstart'])? null : $_POST['dtppmstart'];
-            $appmfq = empty($_POST['dtppmfreq'])? null : $_POST['ppmfreq'];
+            $appmfq = empty($_POST['ppmfreq'])? null : $_POST['ppmfreq'];
             $arem = empty($_POST['arem'])? null : $_POST['arem'];
             $uid = $_SESSION['uid'];
 

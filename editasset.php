@@ -462,9 +462,13 @@ $doccat[4]      =   "Financial";
                     <input type="hidden" name="func" value="edit_asset" />
                     <input type="hidden" name="aid" value="<?php echo $results['id']; ?>" />
                     <table class="full-width no-border">
+                        <?php //print_r($results); ?>
                         <tr>
                             <td>Record ID</td>
                             <td><?php echo $results['id']; ?></td>
+                            <input type="hidden" name="classid" value="<?php echo $results['classid']; ?>">
+                            <input type="hidden" name="typeid" value="<?php echo $results['typeid']; ?>">
+                            <input type="hidden" name="manuid" value="<?php echo $results['manuid']; ?>">
                         </tr>
                         <tr>
                             <td>TEMS No</td>

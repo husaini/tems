@@ -103,7 +103,7 @@ if ($_GET['sSearch'] != "") {
         "asset_model.name LIKE '%" . ms_escape_string($_GET['sSearch']) . "%' OR " .
         "site.name LIKE '%" . ms_escape_string($_GET['sSearch']) . "%' OR " .
         "mote.name LIKE '%" . ms_escape_string($_GET['sSearch']) . "%' OR " .
-        "site_location.name LIKE '%" . ms_escape_string($_GET['sSearch']) . "%') ";
+        "department_location.name LIKE '%" . ms_escape_string($_GET['sSearch']) . "%') ";
 }
 
 if (isset($_GET['search_temsno']) && $_GET['search_temsno']) {

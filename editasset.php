@@ -187,6 +187,7 @@ $doccat[4]      =   "Financial";
             });
             oTable.fnSort( [[1,'desc'] ] );//sort by date created
         }
+        /*
         $('#imglist a').fancybox({
             'titlePosition': 'inside',
             'overlayColor': '#977',
@@ -200,7 +201,7 @@ $doccat[4]      =   "Financial";
                 return '<span id="doctitle">' + title + ' <nobr>[<a href="' + imghrel + '" target="_blank">Full Size</a>]</nobr> <nobr>[<a href="#" onclick="confdel(\'del_doc\',\'' + imgfile + '\')">Delete</a>]</nobr> <nobr>[<a href="#" onclick="switchcat(\'' + imgfile + '\')">Change Category</a>]</nobr></span>';
             }
         });
-
+        */
         $("html").ajaxError(function(xhr, s, e){
             var msg;
             switch (s.error_status) {
@@ -761,7 +762,7 @@ $doccat[4]      =   "Financial";
                                 $imgtitle   =   "";
                                 $imgfile    =   $dir . "/" . $afile[$a];
                                 $thumb      =   ($thisfileext == "pdf")? "theme/default/icopdf.jpg" : $imgfile;
-                                $filelist   .=  "<a rel=\"frl\" href=\"" . $thumb . "\" name=\"" . $imgfile . "\"title=\"" . $imgtitle . "\">".
+                                $filelist   .=  "<a rel=\"frl\" href=\"" . $imgfile . "\" name=\"" . $imgfile . "\"title=\"" . $imgtitle . "\">".
                                                     "<img src=\"" . $thumb . "\" width=\"*\" height=\"100\">".
                                                 "</a>";
                             }

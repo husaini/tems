@@ -762,7 +762,7 @@ $doccat[4]      =   "Financial";
                                 $imgtitle   =   "";
                                 $imgfile    =   $dir . "/" . $afile[$a];
                                 $thumb      =   ($thisfileext == "pdf")? "theme/default/icopdf.jpg" : $imgfile;
-                                $filelist   .=  "<a rel=\"frl\" href=\"" . $imgfile . "\" name=\"" . $imgfile . "\"title=\"" . $imgtitle . "\">".
+                                $filelist   .=  "<a rel=\"frl\" href=\"" . $imgfile . "\" name=\"" . $imgfile . "\" title=\"" . $imgtitle . "\" target=\"_blank\">".
                                                     "<img src=\"" . $thumb . "\" width=\"*\" height=\"100\">".
                                                 "</a>";
                             }

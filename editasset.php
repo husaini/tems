@@ -727,6 +727,22 @@ $doccat[4]      =   "Financial";
                 <?php
                     $extallowed =   array("jpg", "jpeg", "gif", "pdf");
                     $dir        =   "upload/asset/" . cleanfilename($serialno);
+                    $noserials = array('n/a', 'not available', 'missing');
+                    
+                    if (!$serialno || strtolower($serialno) == 'n/a')
+                    {
+                        $dir = 'upload/asset/asset_'.$id;
+                    }
+
+                    if(!$serialno || in_array($serialno, $noserials) || stripos(strtolower($serialno), 'not available'))
+                    { 
+                        $dir_name = 'asset_'.$_POST['id'];
+                    }
+                    else
+                    {
+                        $dir_name = cleanfilename($_POST['sno']);
+                    }
+                    
                     $afile      =   array();
                     if ($handle = @opendir($dir)) {
                         while (false !== ($file = readdir($handle))) {
@@ -782,6 +798,7 @@ $doccat[4]      =   "Financial";
                         <form id="fupload" method="post" action="mod.php" enctype="multipart/form-data">
                             <input type="hidden" name="func" value="add_doc" />
                             <input type="hidden" name="sno" value="<?php echo $serialno; ?>" />
+                            <input type="hidden" name="id" value="<?php echo $id;?>">
                             <table class="full-width no-border">
                                 <tr>
                                     <td>Category</td>

@@ -629,8 +629,18 @@ switch($func) {
             $doccat = $_POST['adoccat'];
             $extallowed = array("jpg", "jpeg", "gif", "pdf");
             $thisfileext = end(explode(".", strtolower($_FILES['adoc']['name'])));
+            $noserials = array('n/a', 'not available', 'missing');
             if (in_array($thisfileext, $extallowed)) {
-                $uploaddir = dirname(__FILE__) . "/upload/asset/" . cleanfilename($_POST['sno']);
+                if(!$_POST['sno'] || in_array(strtolower(trim($_POST['sno'])), $noserials) || stripos(strtolower($_POST['sno']), 'not available'))
+                { 
+                    $dir_name = 'asset_'.$_POST['id'];
+                }
+                else
+                {
+                    $dir_name = cleanfilename($_POST['sno']);
+                }
+                $uploaddir = dirname(__FILE__) . "/upload/asset/" . $dir_name;
+                
                 if (!file_exists($uploaddir)) mkdir($uploaddir);
                 if ($doccat > 0)
                     $uploadfile = "t" . $doccat . "-" . date("YmdHis") . "-" . $_SESSION['uid'] . "-" . strtolower(basename($_FILES['adoc']['name']));
